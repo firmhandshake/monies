@@ -1,0 +1,9 @@
+sense.of.the.universe: 42
+sources:
+  nofluffjobs:
+    host: nofluffjobs.com
+    path: /api/posting
+    port: 443
+    scheme: https
+    categories: backend, frontend
+    cities: warsaw
