@@ -12,11 +12,12 @@ class NoFluffJobsFilterTest extends Specification implements TestCreators {
         def filter = new NoFluffJobsFilter(categories, cities)
 
         when:
-        def filtered = filter.filterRelevantJobs([noFluffJob("aa", "dd"), noFluffJob("bb", "cc"), noFluffJob("xx", "cc"),
-                                                  noFluffJob("xx", "dd"), noFluffJob("xx", "xx")])
+        def filtered = filter.filterRelevantJobs([noFluffJob("1", "aa", "dd"), noFluffJob("2", "bb", "cc"),
+                                                  noFluffJob("3", "xx", "cc"), noFluffJob("4", "xx", "dd"),
+                                                  noFluffJob("5", "xx", "xx")])
 
         then:
-        assert filtered.category == ["aa", "bb"]
-        assert filtered.city == ["dd", "cc"]
+        filtered.category == ["aa", "bb"]
+        filtered.city == ["dd", "cc"]
     }
 }
