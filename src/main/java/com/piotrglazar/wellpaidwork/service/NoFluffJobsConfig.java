@@ -13,7 +13,7 @@ public class NoFluffJobsConfig implements SourceConfig {
     @Value("${sources.nofluffjobs.port}")
     private int port;
 
-    @Value("${sources.nofluffjobs.path}")
+    @Value("${sources.nofluffjobs.rootPath}")
     private String path;
 
     @Value("${sources.nofluffjobs.scheme}")

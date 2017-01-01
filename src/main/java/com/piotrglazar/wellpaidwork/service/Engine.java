@@ -2,7 +2,7 @@ package com.piotrglazar.wellpaidwork.service;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.piotrglazar.wellpaidwork.api.NoFluffJob;
+import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.JobResults;
 import com.piotrglazar.wellpaidwork.model.JobSource;
 import org.slf4j.Logger;
@@ -31,12 +31,12 @@ public class Engine {
         String descriptionsMessage = Joiner.on(", ").join(descriptions);
         logger.info("About to fetch jobs from {} sources: {}", sources.size(), descriptionsMessage);
 
-        List<NoFluffJob> jobs = findJobs();
+        List<JobOffer> jobs = findJobs();
 
         return new JobResults(sources.size(), descriptions, jobs);
     }
 
-    private List<NoFluffJob> findJobs() {
+    private List<JobOffer> findJobs() {
         return sources.stream().flatMap(s -> s.fetch().stream()).collect(Collectors.toList());
     }
 }
