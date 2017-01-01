@@ -5,6 +5,7 @@ import com.piotrglazar.wellpaidwork.api.NoFluffJobDetails;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobEssentials;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobPostings;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobTitle;
+import com.piotrglazar.wellpaidwork.model.Currency;
 import com.piotrglazar.wellpaidwork.model.EmploymentType;
 import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.Period;
@@ -30,7 +31,7 @@ public interface TestCreators {
 
     default JobOffer jobOffer(String id) {
         return new JobOffer(id, "name", "city", "category", "title", "level",
-                new Salary(10, 100, Period.MONTH),
+                new Salary(10, 100, Period.MONTH, Currency.PLN),
                 EmploymentType.PERMANENT);
     }
 }
