@@ -6,7 +6,9 @@ import com.piotrglazar.wellpaidwork.model.EmploymentType;
 import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.Period;
 import com.piotrglazar.wellpaidwork.model.Salary;
+import com.piotrglazar.wellpaidwork.model.Currency;
 import com.piotrglazar.wellpaidwork.util.EmploymentTypeNotFoundException;
+import com.piotrglazar.wellpaidwork.util.SalaryCurrencyNotFoundException;
 import com.piotrglazar.wellpaidwork.util.SalaryPeriodNotFoundException;
 import com.piotrglazar.wellpaidwork.util.Try;
 import org.springframework.stereotype.Component;
@@ -30,11 +32,14 @@ public class NoFluffJobBuilder {
 
     private Try<Salary> salary(NoFluffJobDetails details) {
         return Try.of(() -> {
-            Period period = Period.fromString(details.getEssentials().getSalaryDuration()).orElseThrow(SalaryPeriodNotFoundException::new);
+            Period period = Period.fromString(details.getEssentials().getSalaryDuration())
+                    .orElseThrow(SalaryPeriodNotFoundException::new);
+            Currency currency = Currency.fromString(details.getEssentials().getSalaryCurrency())
+                    .orElseThrow(SalaryCurrencyNotFoundException::new);
             return new Salary(
                     details.getEssentials().getSalaryFrom(),
                     details.getEssentials().getSalaryTo(),
-                    period);
+                    period, currency);
         });
     }
 

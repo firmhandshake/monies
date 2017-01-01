@@ -4,10 +4,12 @@ import com.piotrglazar.wellpaidwork.api.NoFluffJob
 import com.piotrglazar.wellpaidwork.api.NoFluffJobDetails
 import com.piotrglazar.wellpaidwork.api.NoFluffJobEssentials
 import com.piotrglazar.wellpaidwork.api.NoFluffJobTitle
+import com.piotrglazar.wellpaidwork.model.Currency
 import com.piotrglazar.wellpaidwork.model.EmploymentType
 import com.piotrglazar.wellpaidwork.model.Period
 import com.piotrglazar.wellpaidwork.model.Salary
 import com.piotrglazar.wellpaidwork.util.EmploymentTypeNotFoundException
+import com.piotrglazar.wellpaidwork.util.SalaryCurrencyNotFoundException
 import com.piotrglazar.wellpaidwork.util.SalaryPeriodNotFoundException
 import spock.lang.Specification
 
@@ -33,7 +35,7 @@ class NoFluffJobBuilderTest extends Specification {
             category == "category"
             title == "title"
             level == "level"
-            salary == new Salary(10, 100, Period.MONTH)
+            salary == new Salary(10, 100, Period.MONTH, Currency.PLN)
             employmentType == EmploymentType.PERMANENT
         }
     }
@@ -64,5 +66,19 @@ class NoFluffJobBuilderTest extends Specification {
         then:
         offer.isFailure()
         offer.getException() instanceof SalaryPeriodNotFoundException
+    }
+
+    def "should return failed try when salary currency is unknown"() {
+        given:
+        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level")
+        def details = new NoFluffJobDetails("id1", 0, new NoFluffJobEssentials("permanent", "unknown", "month", 10, 100),
+                new NoFluffJobTitle("category", "title", "level"))
+
+        when:
+        def offer = builder.toJobOffer(job, details)
+
+        then:
+        offer.isFailure()
+        offer.getException() instanceof SalaryCurrencyNotFoundException
     }
 }
