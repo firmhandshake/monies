@@ -34,6 +34,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('ch.qos.logback:logback-classic:1.1.8')
     compile('com.google.guava:guava:20.0')
+    compile('joda-time:joda-time:2.9.7')
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.5')
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('com.h2database:h2')
     testCompile('cglib:cglib-nodep:3.2.4')
