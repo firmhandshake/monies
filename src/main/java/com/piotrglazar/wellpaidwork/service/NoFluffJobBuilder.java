@@ -26,7 +26,8 @@ public class NoFluffJobBuilder {
                     details.getTitle().getTitle(),
                     details.getTitle().getLevel(),
                     salary,
-                    employmentType
+                    employmentType,
+                    details.getPosted()
         )));
     }
 

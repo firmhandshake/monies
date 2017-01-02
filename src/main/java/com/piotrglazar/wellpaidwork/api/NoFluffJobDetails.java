@@ -3,18 +3,19 @@ package com.piotrglazar.wellpaidwork.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NoFluffJobDetails {
 
     private final String id;
-    private final long posted;
+    private final DateTime posted;
     private final NoFluffJobEssentials essentials;
     private final NoFluffJobTitle title;
 
     @JsonCreator
     public NoFluffJobDetails(@JsonProperty("id") String id,
-                             @JsonProperty("posted") long posted,
+                             @JsonProperty("posted") DateTime posted,
                              @JsonProperty("essentials") NoFluffJobEssentials essentials,
                              @JsonProperty("title") NoFluffJobTitle title) {
         this.id = id;
@@ -27,7 +28,7 @@ public class NoFluffJobDetails {
         return id;
     }
 
-    public long getPosted() {
+    public DateTime getPosted() {
         return posted;
     }
 

@@ -1,5 +1,7 @@
 package com.piotrglazar.wellpaidwork.model;
 
+import org.joda.time.DateTime;
+
 public class JobOffer {
 
     private final String id;
@@ -10,9 +12,10 @@ public class JobOffer {
     private final String level;
     private final Salary salary;
     private final EmploymentType employmentType;
+    private final DateTime posted;
 
     public JobOffer(String id, String name, String city, String category, String title, String level, Salary salary,
-                    EmploymentType employmentType) {
+                    EmploymentType employmentType, DateTime posted) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -21,6 +24,7 @@ public class JobOffer {
         this.level = level;
         this.salary = salary;
         this.employmentType = employmentType;
+        this.posted = posted;
     }
 
     public String getId() {
@@ -53,5 +57,9 @@ public class JobOffer {
 
     public EmploymentType getEmploymentType() {
         return employmentType;
+    }
+
+    public DateTime getPosted() {
+        return posted;
     }
 }

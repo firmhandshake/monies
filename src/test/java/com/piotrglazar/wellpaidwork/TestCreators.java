@@ -10,13 +10,14 @@ import com.piotrglazar.wellpaidwork.model.EmploymentType;
 import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.Period;
 import com.piotrglazar.wellpaidwork.model.Salary;
+import org.joda.time.DateTime;
 
 import java.util.Arrays;
 
 public interface TestCreators {
 
     default NoFluffJobDetails noFluffJobDetails(String id, String category) {
-        return new NoFluffJobDetails(id, 0,
+        return new NoFluffJobDetails(id, DateTime.parse("2017-01-01"),
                 new NoFluffJobEssentials("permanent", "pln", "month", 100, 1000),
                 new NoFluffJobTitle(category, "developer", "senior"));
     }
@@ -32,6 +33,6 @@ public interface TestCreators {
     default JobOffer jobOffer(String id) {
         return new JobOffer(id, "name", "city", "category", "title", "level",
                 new Salary(10, 100, Period.MONTH, Currency.PLN),
-                EmploymentType.PERMANENT);
+                EmploymentType.PERMANENT, DateTime.parse("2017-01-01"));
     }
 }
