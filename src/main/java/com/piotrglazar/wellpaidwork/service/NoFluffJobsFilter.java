@@ -47,6 +47,10 @@ public class NoFluffJobsFilter {
     }
 
     private boolean shouldProcess(NoFluffJob job) {
+        return job.isRemoteWorkPossible() || hasRequiredCityAndCategory(job);
+    }
+
+    private boolean hasRequiredCityAndCategory(NoFluffJob job) {
         return categories.contains(job.getCategory().toLowerCase()) && cities.contains(job.getCity().toLowerCase());
     }
 }

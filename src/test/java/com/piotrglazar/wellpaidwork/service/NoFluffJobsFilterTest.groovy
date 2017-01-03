@@ -1,6 +1,7 @@
 package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.TestCreators
+import com.piotrglazar.wellpaidwork.api.NoFluffJob
 import spock.lang.Specification
 
 class NoFluffJobsFilterTest extends Specification implements TestCreators {
@@ -19,5 +20,16 @@ class NoFluffJobsFilterTest extends Specification implements TestCreators {
         then:
         filtered.category == ["aa", "bb"]
         filtered.city == ["dd", "cc"]
+    }
+
+    def "should pass job offer with remote work possible"() {
+        given:
+        def filter = new NoFluffJobsFilter(Collections.emptySet(), Collections.emptySet())
+
+        when:
+        def filtered = filter.filterRelevantJobs([new NoFluffJob("1", "", "", "", "", "", 100, 2, 1)])
+
+        then:
+        filtered.id == ["1"]
     }
 }

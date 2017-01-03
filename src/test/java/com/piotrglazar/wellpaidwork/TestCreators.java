@@ -23,7 +23,7 @@ public interface TestCreators {
     }
 
     default NoFluffJob noFluffJob(String id, String category, String city) {
-        return new NoFluffJob(id, "name", city, category, "", "");
+        return new NoFluffJob(id, "name", city, category, "", "", 0, 1, 1);
     }
 
     default NoFluffJobPostings jobPostings(NoFluffJob... noFluffJobs) {
@@ -33,6 +33,6 @@ public interface TestCreators {
     default JobOffer jobOffer(String id) {
         return new JobOffer(id, "name", "city", "category", "title", "level",
                 new Salary(10, 100, Period.MONTH, Currency.PLN),
-                EmploymentType.PERMANENT, DateTime.parse("2017-01-01"));
+                EmploymentType.PERMANENT, DateTime.parse("2017-01-01"), false);
     }
 }

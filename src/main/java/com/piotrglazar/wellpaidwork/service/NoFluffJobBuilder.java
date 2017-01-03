@@ -27,8 +27,8 @@ public class NoFluffJobBuilder {
                     details.getTitle().getLevel(),
                     salary,
                     employmentType,
-                    details.getPosted()
-        )));
+                    details.getPosted(),
+                    job.isRemoteWorkPossible())));
     }
 
     private Try<Salary> salary(NoFluffJobDetails details) {
