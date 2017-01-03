@@ -22,7 +22,7 @@ class NoFluffJobBuilderTest extends Specification {
 
     def "should build job from no fluff jobs data"() {
         given:
-        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level")
+        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level", 100, 2, 1)
         def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100),
             new NoFluffJobTitle("category", "title", "level"))
 
@@ -41,12 +41,13 @@ class NoFluffJobBuilderTest extends Specification {
             salary == new Salary(10, 100, Period.MONTH, Currency.PLN)
             employmentType == EmploymentType.PERMANENT
             posted == jobPostedDate
+            remotePossible
         }
     }
 
     def "should return failed try when employment type is unknown"() {
         given:
-        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level")
+        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level", 0, 1, 1)
         def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("unknown", "pln", "month", 10, 100),
                 new NoFluffJobTitle("category", "title", "level"))
 
@@ -60,7 +61,7 @@ class NoFluffJobBuilderTest extends Specification {
 
     def "should return failed try when salary period is unknown"() {
         given:
-        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level")
+        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level", 0, 1, 1)
         def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "unknown", 10, 100),
                 new NoFluffJobTitle("category", "title", "level"))
 
@@ -74,7 +75,7 @@ class NoFluffJobBuilderTest extends Specification {
 
     def "should return failed try when salary currency is unknown"() {
         given:
-        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level")
+        def job = new NoFluffJob("id1", "name", "city", "category", "title", "level", 0, 1, 1)
         def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "unknown", "month", 10, 100),
                 new NoFluffJobTitle("category", "title", "level"))
 
