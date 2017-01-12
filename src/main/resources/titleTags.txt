@@ -1,0 +1,50 @@
+# synonyms
+front-end => frontend
+lead => leader
+qa => quality assurance
+sr => senior
+
+# tags
+java
+scala
+developer
+.net
+remote
+senior
+expert
+data
+scientist
+ruby
+c++
+c#
+c
+hardware
+web
+full
+stack
+engineer
+leader
+architect
+ui
+linux
+kernel
+react
+javascript
+node
+android
+mobile
+xamarin
+swift
+team
+sharepoint
+angular
+frontend
+test
+automation
+quality
+assurance
+devops
+aws
+python
+junior
+oracle

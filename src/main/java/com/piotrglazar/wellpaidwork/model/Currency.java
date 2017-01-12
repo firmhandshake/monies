@@ -1,5 +1,7 @@
 package com.piotrglazar.wellpaidwork.model;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -12,7 +14,8 @@ public enum Currency {
     USD,
     GBP;
 
-    private static final Map<String, Currency> names = Stream.of(Currency.values()).collect(Collectors.toMap(Currency::name, Function.identity()));
+    private static final Map<String, Currency> names = ImmutableMap.copyOf(Stream.of(Currency.values())
+            .collect(Collectors.toMap(Currency::name, Function.identity())));
 
     public static Optional<Currency> fromString(String currency) {
         return Optional.ofNullable(names.get(currency.toUpperCase()));

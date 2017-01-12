@@ -1,0 +1,8 @@
+# synonyms
+ecmascript 2015 => javascript6
+angular => angularjs
+
+# languages
+java
+java8
+scala

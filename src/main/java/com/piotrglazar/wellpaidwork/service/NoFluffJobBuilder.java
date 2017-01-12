@@ -1,34 +1,56 @@
 package com.piotrglazar.wellpaidwork.service;
 
+import com.google.common.collect.ImmutableMap;
 import com.piotrglazar.wellpaidwork.api.NoFluffJob;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobDetails;
-import com.piotrglazar.wellpaidwork.model.EmploymentType;
-import com.piotrglazar.wellpaidwork.model.JobOffer;
-import com.piotrglazar.wellpaidwork.model.Period;
-import com.piotrglazar.wellpaidwork.model.Salary;
-import com.piotrglazar.wellpaidwork.model.Currency;
-import com.piotrglazar.wellpaidwork.util.EmploymentTypeNotFoundException;
-import com.piotrglazar.wellpaidwork.util.SalaryCurrencyNotFoundException;
-import com.piotrglazar.wellpaidwork.util.SalaryPeriodNotFoundException;
-import com.piotrglazar.wellpaidwork.util.Try;
+import com.piotrglazar.wellpaidwork.api.NoFluffTechnology;
+import com.piotrglazar.wellpaidwork.model.*;
+import com.piotrglazar.wellpaidwork.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class NoFluffJobBuilder {
 
+    private final TitleTags titleTags;
+
+    private final TechnologyTags technologyTags;
+
+    private static final Map<String, String> CATEGORY_MAPPING = ImmutableMap.of("projectManager", "PROJECT_MANAGER",
+            "businessAnalyst", "BUSINESS_ANALYST");
+
+    @Autowired
+    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags) {
+        this.titleTags = titleTags;
+        this.technologyTags = technologyTags;
+    }
+
     public Try<JobOffer> toJobOffer(NoFluffJob job, NoFluffJobDetails details) {
         return employmentType(details).flatMap(employmentType ->
-                salary(details).map(salary -> new JobOffer(
-                    job.getId(),
-                    job.getName(),
-                    job.getCity(),
-                    details.getTitle().getCategory(),
-                    details.getTitle().getTitle(),
-                    details.getTitle().getLevel(),
-                    salary,
-                    employmentType,
-                    details.getPosted(),
-                    job.isRemoteWorkPossible())));
+                salary(details).flatMap(salary ->
+                    category(details).flatMap(category ->
+                        position(details).map(position -> new JobOffer(
+                            job.getId(),
+                            job.getName(),
+                            job.getCity(),
+                            category,
+                            details.getTitle().getTitle(),
+                            titleTags.tags(details.getTitle().getTitle()),
+                            position,
+                            salary,
+                            employmentType,
+                            details.getPosted(),
+                            job.isRemoteWorkPossible(),
+                            technologyTags(details))
+                        )
+                    )
+                )
+        );
     }
 
     private Try<Salary> salary(NoFluffJobDetails details) {
@@ -49,5 +71,29 @@ public class NoFluffJobBuilder {
             EmploymentType.fromString(details.getEssentials().getEmploymentType())
                     .<EmploymentTypeNotFoundException>orElseThrow(EmploymentTypeNotFoundException::new)
         );
+    }
+
+    private Try<Category> category(NoFluffJobDetails details) {
+        return Try.of(() -> {
+            String category = details.getTitle().getCategory();
+            String mappedCategory = CATEGORY_MAPPING.getOrDefault(category, category);
+            return Category.fromString(mappedCategory)
+                .<CategoryNotFoundException>orElseThrow(CategoryNotFoundException::new);
+        });
+    }
+
+    private Try<Position> position(NoFluffJobDetails details) {
+        return Try.of(() -> Position.fromString(details.getTitle().getLevel())
+                .<PositionNotFoundException>orElseThrow(PositionNotFoundException::new));
+    }
+
+    private Set<String> technologyTags(NoFluffJobDetails details) {
+        return Stream.concat(
+                Stream.concat(details.getTechnologiesUsed().stream(), details.getMusts().stream()),
+                details.getNices().stream())
+                .map(NoFluffTechnology::getValue)
+                .map(technologyTags::tags)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 }

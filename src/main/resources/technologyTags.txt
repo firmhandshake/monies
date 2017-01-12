@@ -1,0 +1,127 @@
+# synonyms
+ecmascript 2015 => javascript6
+angular => angularjs
+js => javascript
+soa => microservices
+node => nodejs
+es6 => javascript6
+embedded experience => embedded
+gnu => linux
+jee => javaee
+go => golang
+ror => ruby on rails
+
+# content
+html5
+html
+css
+sass
+css3
+xml
+less
+
+# methodologies
+rest
+unit testing
+microservices
+tdd
+scrum
+rwd
+web services
+mvc
+continuous integration
+clean code
+
+# languages
+java
+java8
+scala
+c++
+javascript
+javaee
+c#
+python
+c
+php
+golang
+r
+ruby
+pl/sql
+
+# tools
+git
+maven
+ant
+jenkins
+gradle
+sbt
+webpack
+postcss
+bamboo
+jira
+intellij
+openstack
+confluence
+office
+aws
+shell
+bash
+powershell
+docker
+nginx
+mercurial
+gulp
+ansible
+azure
+sharepoint
+grunt
+office 365
+cloud foundry
+elixir
+
+# databases
+mssql
+sql
+oracle
+redis
+postgresql
+mysql
+mongodb
+memcached
+elasticsearch
+sqlite
+redshift
+
+# misc
+functional programming
+machine learning
+3d
+linux
+database optimization
+embedded
+
+# frameworks
+spring
+reactjs
+jms
+springboot
+angularjs
+redux
+directx
+opengl
+jpa
+.net
+jquery
+qt
+django
+coffeescript
+zend
+wordpress
+nodejs
+hibernate
+flask
+spark
+hadoop
+hive
+ruby on rails
+bootstrap

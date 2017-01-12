@@ -2,10 +2,14 @@ package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.TestCreators
 import com.piotrglazar.wellpaidwork.api.NoFluffJobsClient
+import com.piotrglazar.wellpaidwork.model.TechnologyTags
+import com.piotrglazar.wellpaidwork.model.TitleTags
 import com.piotrglazar.wellpaidwork.util.Try
 import spock.lang.Specification
 
 import java.util.concurrent.CompletableFuture
+
+import static com.piotrglazar.wellpaidwork.model.Category.BACKEND
 
 class NoFluffJobsSourceTest extends Specification implements TestCreators {
 
@@ -16,7 +20,8 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
     def "should fetch jobs from no fluff page"() {
         given:
         def client = Mock(NoFluffJobsClient)
-        def source = new NoFluffJobsSource(client, filter(), new NoFluffJobBuilder())
+        def source = new NoFluffJobsSource(client, filter(),
+                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:])))
 
         when:
         def found = source.fetch()
@@ -28,7 +33,7 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         1 * client.getJobDetailsAsync(backendJob) >> CompletableFuture.completedFuture(Optional.of(backendJobDetails))
         0 * client.getJobDetails(hrJob)
         found.size() == 1
-        found.category == ["backend"]
+        found.category == [BACKEND]
         found.city == ["warsaw"]
     }
 
