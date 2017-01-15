@@ -75,7 +75,7 @@ class NoFluffJobsClientTest extends Specification implements TestCreators {
     }
 
     private okJobsResponse() {
-        new ResponseEntity<>(new NoFluffJobPostings([noFluffJob("id", "category", "city")]), HttpStatus.OK)
+        new ResponseEntity<>(new NoFluffJobPostings([noFluffJob("externalId", "category", "city")]), HttpStatus.OK)
     }
 
     private okDetailsResponse() {

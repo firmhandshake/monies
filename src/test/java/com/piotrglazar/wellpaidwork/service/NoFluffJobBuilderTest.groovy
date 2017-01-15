@@ -2,6 +2,7 @@ package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.api.*
 import com.piotrglazar.wellpaidwork.model.*
+import com.piotrglazar.wellpaidwork.model.db.JobOfferSource
 import com.piotrglazar.wellpaidwork.util.CategoryNotFoundException
 import com.piotrglazar.wellpaidwork.util.EmploymentTypeNotFoundException
 import com.piotrglazar.wellpaidwork.util.SalaryCurrencyNotFoundException
@@ -18,7 +19,7 @@ class NoFluffJobBuilderTest extends Specification {
     def "should build job from no fluff jobs data"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 100, 2, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100, 0),
                 new NoFluffJobTitle("backend", "title", "developer"), Collections.singletonList(new NoFluffTechnology(0, "t")), Collections.emptyList(),
                 Collections.emptyList())
 
@@ -28,7 +29,7 @@ class NoFluffJobBuilderTest extends Specification {
         then:
         offer.isSuccess()
         with(offer.get()) {
-            id == "id1"
+            externalId == "id1"
             name == "name"
             city == "city"
             category == Category.BACKEND
@@ -40,13 +41,14 @@ class NoFluffJobBuilderTest extends Specification {
             posted == jobPostedDate
             remotePossible
             technologyTags == ["technologyTag"].toSet()
+            source == JobOfferSource.NO_FLUFF_JOBS
         }
     }
 
     def "should return failed try when employment type is unknown"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 0, 1, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("unknown", "pln", "month", 10, 100),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("unknown", "pln", "month", 10, 100, 0),
                 new NoFluffJobTitle("backend", "title", "developer"), Collections.emptyList(), Collections.emptyList(),
                 Collections.emptyList())
 
@@ -61,7 +63,7 @@ class NoFluffJobBuilderTest extends Specification {
     def "should return failed try when salary period is unknown"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 0, 1, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "unknown", 10, 100),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "unknown", 10, 100, 0),
                 new NoFluffJobTitle("backend", "title", "developer"), Collections.emptyList(), Collections.emptyList(),
                 Collections.emptyList())
 
@@ -76,7 +78,7 @@ class NoFluffJobBuilderTest extends Specification {
     def "should return failed try when salary currency is unknown"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 0, 1, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "unknown", "month", 10, 100),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "unknown", "month", 10, 100, 0),
                 new NoFluffJobTitle("backend", "title", "developer"), Collections.emptyList(), Collections.emptyList(),
                 Collections.emptyList())
 
@@ -91,7 +93,7 @@ class NoFluffJobBuilderTest extends Specification {
     def "should return failed try when category is unknown"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "unknown", "title", "developer", 0, 1, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100, 0),
                 new NoFluffJobTitle("unknown", "title", "developer"), Collections.emptyList(), Collections.emptyList(),
                 Collections.emptyList())
 

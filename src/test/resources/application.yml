@@ -9,12 +9,8 @@ sources:
     cities: warsaw
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/jobs
-    username: wellpaidwork
-    password: excitingjobs
-    platform: POSTGRESQL
+    url: jdbc:h2:~/jobs;DB_CLOSE_ON_EXIT=FALSE
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: true
-#spring.jpa.properties.jadira.usertype.autoRegisterUserTypes: true

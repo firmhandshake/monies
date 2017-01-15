@@ -5,6 +5,7 @@ import com.piotrglazar.wellpaidwork.api.NoFluffJob;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobDetails;
 import com.piotrglazar.wellpaidwork.api.NoFluffTechnology;
 import com.piotrglazar.wellpaidwork.model.*;
+import com.piotrglazar.wellpaidwork.model.db.JobOfferSource;
 import com.piotrglazar.wellpaidwork.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,8 @@ public class NoFluffJobBuilder {
                             employmentType,
                             details.getPosted(),
                             job.isRemoteWorkPossible(),
-                            technologyTags(details))
+                            technologyTags(details),
+                            JobOfferSource.NO_FLUFF_JOBS)
                         )
                     )
                 )

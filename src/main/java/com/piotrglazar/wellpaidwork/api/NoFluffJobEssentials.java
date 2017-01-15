@@ -18,12 +18,13 @@ public class NoFluffJobEssentials {
                                 @JsonProperty("salaryCurrency") String salaryCurrency,
                                 @JsonProperty("salaryDuration") String salaryDuration,
                                 @JsonProperty("salaryFrom") int salaryFrom,
-                                @JsonProperty("salaryTo") int salaryTo) {
+                                @JsonProperty("salaryTo") int salaryTo,
+                                @JsonProperty("salary") int salary) {
         this.employmentType = employmentType;
         this.salaryCurrency = salaryCurrency;
         this.salaryDuration = salaryDuration;
-        this.salaryFrom = salaryFrom;
-        this.salaryTo = salaryTo;
+        this.salaryFrom = chooseSalary(salary, salaryFrom);
+        this.salaryTo = chooseSalary(salary, salaryTo);
     }
 
     public String getEmploymentType() {
@@ -44,5 +45,9 @@ public class NoFluffJobEssentials {
 
     public int getSalaryTo() {
         return salaryTo;
+    }
+
+    private static int chooseSalary(int singleValue, int fallback) {
+        return (singleValue != 0) ? singleValue : fallback;
     }
 }
