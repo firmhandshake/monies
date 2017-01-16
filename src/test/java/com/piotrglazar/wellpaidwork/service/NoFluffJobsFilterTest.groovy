@@ -2,6 +2,11 @@ package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.TestCreators
 import com.piotrglazar.wellpaidwork.api.NoFluffJob
+import com.piotrglazar.wellpaidwork.model.*
+import com.piotrglazar.wellpaidwork.model.dao.JobOfferDao
+import com.piotrglazar.wellpaidwork.model.db.JobOfferEntity
+import com.piotrglazar.wellpaidwork.model.db.JobOfferSource
+import com.piotrglazar.wellpaidwork.model.db.SalaryEntity
 import spock.lang.Specification
 
 class NoFluffJobsFilterTest extends Specification implements TestCreators {
@@ -10,7 +15,8 @@ class NoFluffJobsFilterTest extends Specification implements TestCreators {
         given:
         def categories = "aa, bb"
         def cities = "cc, dd"
-        def filter = new NoFluffJobsFilter(categories, cities)
+        def dao = Mock(JobOfferDao)
+        def filter = new NoFluffJobsFilter(categories, cities, dao)
 
         when:
         def filtered = filter.filterRelevantJobs([noFluffJob("1", "aa", "dd"), noFluffJob("2", "bb", "cc"),
@@ -20,16 +26,34 @@ class NoFluffJobsFilterTest extends Specification implements TestCreators {
         then:
         filtered.category == ["aa", "bb"]
         filtered.city == ["dd", "cc"]
+        2 * dao.findRaw(_, _) >> Optional.empty()
     }
 
     def "should pass job offer with remote work possible"() {
         given:
-        def filter = new NoFluffJobsFilter(Collections.emptySet(), Collections.emptySet())
+        def dao = Mock(JobOfferDao)
+        def filter = new NoFluffJobsFilter(Collections.emptySet(), Collections.emptySet(), dao)
 
         when:
         def filtered = filter.filterRelevantJobs([new NoFluffJob("1", "", "", "", "", "", 100, 2, 1)])
 
         then:
         filtered.id == ["1"]
+        1 * dao.findRaw(_, _) >> Optional.empty()
+    }
+
+    def "should not pass a job offer when it was already processed"() {
+        given:
+        def dao = Mock(JobOfferDao)
+        def filter = new NoFluffJobsFilter("aa", "cc", dao)
+
+        when:
+        def filtered = filter.filterRelevantJobs([noFluffJob("1", "aa", "cc")])
+
+        then:
+        filtered.empty
+        1 * dao.findRaw(_, _) >> Optional.of(new JobOfferEntity("externalId", "name", "city", Category.BACKEND,
+                "title", "backend", Position.DEVELOPER, new SalaryEntity(14000, 18000, Period.MONTH, Currency.PLN),
+                EmploymentType.PERMANENT, "2017-01-01", false, "scala;java", JobOfferSource.TEST))
     }
 }

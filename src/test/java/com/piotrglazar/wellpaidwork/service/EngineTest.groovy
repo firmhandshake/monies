@@ -2,12 +2,16 @@ package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.TestCreators
 import com.piotrglazar.wellpaidwork.model.JobOffer
+import com.piotrglazar.wellpaidwork.model.JobResults
 import com.piotrglazar.wellpaidwork.model.JobSource
+import org.springframework.context.ApplicationEventPublisher
 import spock.lang.Specification
 
 class EngineTest extends Specification implements TestCreators {
 
-    def engine = new Engine([firstJobSource(), secondJobSource()])
+    def eventPublisher = Mock(ApplicationEventPublisher)
+
+    def engine = new Engine([firstJobSource(), secondJobSource()], eventPublisher)
 
     def "should fetch jobs from all sources"() {
         when:
@@ -19,6 +23,14 @@ class EngineTest extends Specification implements TestCreators {
             descriptions == ["first", "second"]
             jobs.size() == 2
         }
+    }
+
+    def "should publish fetched jobs"() {
+        when:
+        engine.fetchJobs()
+
+        then:
+        1 * eventPublisher.publishEvent(_ as JobResults)
     }
 
     def firstJobSource() {

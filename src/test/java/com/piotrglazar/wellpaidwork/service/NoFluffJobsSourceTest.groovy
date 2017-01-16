@@ -4,6 +4,7 @@ import com.piotrglazar.wellpaidwork.TestCreators
 import com.piotrglazar.wellpaidwork.api.NoFluffJobsClient
 import com.piotrglazar.wellpaidwork.model.TechnologyTags
 import com.piotrglazar.wellpaidwork.model.TitleTags
+import com.piotrglazar.wellpaidwork.model.dao.JobOfferDao
 import com.piotrglazar.wellpaidwork.util.Try
 import spock.lang.Specification
 
@@ -19,14 +20,16 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
 
     def "should fetch jobs from no fluff page"() {
         given:
+        def dao = Mock(JobOfferDao)
         def client = Mock(NoFluffJobsClient)
-        def source = new NoFluffJobsSource(client, filter(),
+        def source = new NoFluffJobsSource(client, filter(dao),
                 new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:])))
 
         when:
         def found = source.fetch()
 
         then:
+        1 * dao.findRaw(_, _) >> Optional.empty()
         1 * client.getJobPostings() >> Optional.of(
                 jobPostings(backendJob, hrJob)
         )
@@ -39,14 +42,16 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
 
     def "should not fail when it was unable to build job details"() {
         given:
+        def dao = Mock(JobOfferDao)
         def client = Mock(NoFluffJobsClient)
         def builder = Mock(NoFluffJobBuilder)
-        def source = new NoFluffJobsSource(client, filter(), builder)
+        def source = new NoFluffJobsSource(client, filter(dao), builder)
 
         when:
         def found = source.fetch()
 
         then:
+        1 * dao.findRaw(_, _) >> Optional.empty()
         1 * client.getJobPostings() >> Optional.of(
                 jobPostings(backendJob, hrJob)
         )
@@ -59,7 +64,7 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         given:
         def client = Mock(NoFluffJobsClient)
         def jobBuilder = Mock(NoFluffJobBuilder)
-        def source = new NoFluffJobsSource(client, filter(), jobBuilder)
+        def source = new NoFluffJobsSource(client, filter(Mock(JobOfferDao)), jobBuilder)
 
         when:
         def found = source.fetch()
@@ -70,7 +75,7 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         1 * client.getJobPostings() >> Optional.empty()
     }
 
-    private static filter() {
-        new NoFluffJobsFilter("backend", "warsaw")
+    private static filter(JobOfferDao dao) {
+        new NoFluffJobsFilter("backend", "warsaw", dao)
     }
 }

@@ -8,6 +8,7 @@ import com.piotrglazar.wellpaidwork.model.JobSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -21,9 +22,12 @@ public class Engine {
 
     private final List<JobSource> sources;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
-    public Engine(List<JobSource> sources) {
+    public Engine(List<JobSource> sources, ApplicationEventPublisher eventPublisher) {
         this.sources = ImmutableList.copyOf(sources);
+        this.eventPublisher = eventPublisher;
     }
 
     public JobResults fetchJobs() {
@@ -33,7 +37,9 @@ public class Engine {
 
         List<JobOffer> jobs = findJobs();
 
-        return new JobResults(sources.size(), descriptions, jobs);
+        JobResults jobResults = new JobResults(sources.size(), descriptions, jobs);
+        eventPublisher.publishEvent(jobResults);
+        return jobResults;
     }
 
     private List<JobOffer> findJobs() {
