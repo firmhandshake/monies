@@ -7,14 +7,4 @@ sources:
     scheme: https
     categories: backend, frontend
     cities: warsaw
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/jobs
-    username: wellpaidwork
-    password: excitingjobs
-    platform: POSTGRESQL
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-#spring.jpa.properties.jadira.usertype.autoRegisterUserTypes: true
+# add machine-specific properties to application-default.yml
