@@ -67,13 +67,16 @@ public class JobOfferEntity {
     @Column(nullable = false)
     private JobOfferSource source;
 
+    @Column(nullable = false)
+    private String createdAt;
+
     protected JobOfferEntity() {
         // persistence constructor
     }
 
     public JobOfferEntity(String externalId, String name, String city, Category category, String title,
                           String titleTags, Position position, SalaryEntity salary, EmploymentType employmentType, String posted, Boolean remotePossible,
-                          String technologyTags, JobOfferSource source) {
+                          String technologyTags, JobOfferSource source, String createdAt) {
         this.externalId = externalId;
         this.name = name;
         this.city = city;
@@ -87,6 +90,7 @@ public class JobOfferEntity {
         this.remotePossible = remotePossible;
         this.technologyTags = technologyTags;
         this.source = source;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -195,5 +199,13 @@ public class JobOfferEntity {
 
     public void setSource(JobOfferSource source) {
         this.source = source;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

@@ -18,17 +18,18 @@ import java.util.stream.Stream;
 @Component
 public class NoFluffJobBuilder {
 
-    private final TitleTags titleTags;
-
-    private final TechnologyTags technologyTags;
-
     private static final Map<String, String> CATEGORY_MAPPING = ImmutableMap.of("projectManager", "PROJECT_MANAGER",
             "businessAnalyst", "BUSINESS_ANALYST");
 
+    private final TitleTags titleTags;
+    private final TechnologyTags technologyTags;
+    private final DateTimeProvider dateTimeProvider;
+
     @Autowired
-    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags) {
+    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags, DateTimeProvider dateTimeProvider) {
         this.titleTags = titleTags;
         this.technologyTags = technologyTags;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     public Try<JobOffer> toJobOffer(NoFluffJob job, NoFluffJobDetails details) {
@@ -48,7 +49,8 @@ public class NoFluffJobBuilder {
                             details.getPosted(),
                             job.isRemoteWorkPossible(),
                             technologyTags(details),
-                            JobOfferSource.NO_FLUFF_JOBS)
+                            JobOfferSource.NO_FLUFF_JOBS,
+                            dateTimeProvider.get())
                         )
                     )
                 )

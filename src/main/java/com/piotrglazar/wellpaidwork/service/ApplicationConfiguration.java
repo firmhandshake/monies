@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.piotrglazar.wellpaidwork.model.TechnologyTags;
 import com.piotrglazar.wellpaidwork.model.TitleTags;
+import com.piotrglazar.wellpaidwork.util.DateTimeProvider;
 import com.piotrglazar.wellpaidwork.util.TagFile;
 import com.piotrglazar.wellpaidwork.util.TagFileReader;
 import com.piotrglazar.wellpaidwork.util.Try;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,11 @@ public class ApplicationConfiguration {
     @Bean
     public TitleTags titleTags() {
         return fromTagFile(TITLE_TAGS_FILE, tf -> new TitleTags(tf.getTags(), tf.getSynonyms()));
+    }
+
+    @Bean
+    public DateTimeProvider dateTimeProvider() {
+        return DateTime::new;
     }
 
     private <T> T fromTagFile(String file, Function<TagFile, T> factory) {

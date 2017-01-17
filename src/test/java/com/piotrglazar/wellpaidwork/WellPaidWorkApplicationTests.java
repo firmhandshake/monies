@@ -51,7 +51,7 @@ public class WellPaidWorkApplicationTests {
                 "senior developer", ImmutableSet.of("senior", "developer"), Position.DEVELOPER,
                 new Salary(15000, 18000, Period.MONTH, Currency.PLN),
                 EmploymentType.PERMANENT, DateTime.parse("2017-01-01"), false,
-                ImmutableSet.of("scala", "machine learning"), JobOfferSource.TEST);
+                ImmutableSet.of("scala", "machine learning"), JobOfferSource.TEST, DateTime.parse("2017-01-01"));
 
         // when
         Try<Long> idTry = dao.save(jobOffer);
@@ -69,7 +69,7 @@ public class WellPaidWorkApplicationTests {
                 ImmutableSet.of("senior", "developer"), Position.DEVELOPER, new Salary(15000,
                 18000, Period.MONTH, Currency.PLN), EmploymentType.PERMANENT,
                 DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
-                JobOfferSource.TEST);
+                JobOfferSource.TEST, DateTime.parse("2017-01-01"));
         dao.save(jobOffer);
 
         // when
@@ -88,7 +88,7 @@ public class WellPaidWorkApplicationTests {
                 ImmutableSet.of("senior", "developer"), Position.DEVELOPER, new Salary(15000,
                 18000, Period.MONTH, Currency.PLN), EmploymentType.PERMANENT,
                 DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
-                JobOfferSource.TEST);
+                JobOfferSource.TEST, DateTime.parse("2017-01-01"));
         assertThat(dao.save(jobOffer).isSuccess());
 
         // when

@@ -1,5 +1,6 @@
 package com.piotrglazar.wellpaidwork.service
 
+import com.piotrglazar.wellpaidwork.TestDateTimeProvider
 import com.piotrglazar.wellpaidwork.api.*
 import com.piotrglazar.wellpaidwork.model.*
 import com.piotrglazar.wellpaidwork.model.db.JobOfferSource
@@ -12,9 +13,11 @@ import spock.lang.Specification
 
 class NoFluffJobBuilderTest extends Specification {
 
+    def testDateTimeProvider = new TestDateTimeProvider().withDate("2017-01-01")
+
     def jobPostedDate = DateTime.parse("2017-01-01")
 
-    def builder = new NoFluffJobBuilder(dummyTitleTags(), dummyTechnologyTags())
+    def builder = new NoFluffJobBuilder(dummyTitleTags(), dummyTechnologyTags(), testDateTimeProvider)
 
     def "should build job from no fluff jobs data"() {
         given:
@@ -42,6 +45,7 @@ class NoFluffJobBuilderTest extends Specification {
             remotePossible
             technologyTags == ["technologyTag"].toSet()
             source == JobOfferSource.NO_FLUFF_JOBS
+            createdAt == DateTime.parse("2017-01-01")
         }
     }
 
