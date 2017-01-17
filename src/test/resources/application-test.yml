@@ -1,12 +1,4 @@
 sense.of.the.universe: 42
-sources:
-  nofluffjobs:
-    host: nofluffjobs.com
-    rootPath: /api/posting
-    port: 443
-    scheme: https
-    categories: backend, frontend
-    cities: warsaw
 spring:
   datasource:
     url: jdbc:h2:~/jobs;DB_CLOSE_ON_EXIT=FALSE

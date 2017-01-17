@@ -1,0 +1,11 @@
+#please provide your db config details and rename this file to application-default.yml
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/db
+#    username: postgres
+#    password: postgres
+#    platform: POSTGRESQL
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
