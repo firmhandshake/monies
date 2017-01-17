@@ -23,10 +23,11 @@ public class JobOffer {
     private final boolean remotePossible;
     private final Set<String> technologyTags;
     private final JobOfferSource source;
+    private final DateTime createdAt;
 
     public JobOffer(String externalId, String name, String city, Category category, String title, Set<String> titleTags,
                     Position position, Salary salary, EmploymentType employmentType, DateTime posted, boolean remotePossible,
-                    Set<String> technologyTags, JobOfferSource source) {
+                    Set<String> technologyTags, JobOfferSource source, DateTime createdAt) {
         this.externalId = externalId;
         this.name = name;
         this.city = city;
@@ -40,6 +41,7 @@ public class JobOffer {
         this.remotePossible = remotePossible;
         this.technologyTags = technologyTags;
         this.source = source;
+        this.createdAt = createdAt;
     }
 
     public String getExternalId() {
@@ -94,6 +96,10 @@ public class JobOffer {
         return source;
     }
 
+    public DateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -111,13 +117,14 @@ public class JobOffer {
                 employmentType == jobOffer.employmentType &&
                 Objects.equal(posted, jobOffer.posted) &&
                 Objects.equal(technologyTags, jobOffer.technologyTags) &&
-                source == jobOffer.source;
+                source == jobOffer.source &&
+                Objects.equal(createdAt, jobOffer.createdAt);
     }
 
     @Override
     public final int hashCode() {
         return Objects.hashCode(externalId, name, city, category, title, titleTags, position, salary, employmentType,
-                posted, remotePossible, technologyTags, source);
+                posted, remotePossible, technologyTags, source, createdAt);
     }
 
     @Override
@@ -136,6 +143,7 @@ public class JobOffer {
                 .add("remotePossible", remotePossible)
                 .add("technologyTags", technologyTags)
                 .add("source", source)
+                .add("createdAt", createdAt)
                 .toString();
     }
 }

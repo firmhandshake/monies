@@ -33,7 +33,7 @@ public interface TestCreators {
         return new JobOffer(id, "name", "city", Category.BACKEND, "title", Collections.emptySet(),
                 Position.DEVELOPER, new Salary(10, 100, Period.MONTH, Currency.PLN),
                 EmploymentType.PERMANENT, DateTime.parse("2017-01-01"), false, Collections.emptySet(),
-                JobOfferSource.TEST);
+                JobOfferSource.TEST, DateTime.parse("2017-01-01"));
     }
 
     default JobResults jobResults(JobOffer... jobOffers) {

@@ -1,6 +1,7 @@
 package com.piotrglazar.wellpaidwork.service
 
 import com.piotrglazar.wellpaidwork.TestCreators
+import com.piotrglazar.wellpaidwork.TestDateTimeProvider
 import com.piotrglazar.wellpaidwork.api.NoFluffJobsClient
 import com.piotrglazar.wellpaidwork.model.TechnologyTags
 import com.piotrglazar.wellpaidwork.model.TitleTags
@@ -23,7 +24,7 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         def dao = Mock(JobOfferDao)
         def client = Mock(NoFluffJobsClient)
         def source = new NoFluffJobsSource(client, filter(dao),
-                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:])))
+                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:]), new TestDateTimeProvider()))
 
         when:
         def found = source.fetch()

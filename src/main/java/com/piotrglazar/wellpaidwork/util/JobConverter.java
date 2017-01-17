@@ -34,7 +34,9 @@ public class JobConverter {
                         jobOffer.getSalary().getCurrency()), jobOffer.getEmploymentType(),
                 jobOffer.getPosted().toString(dateTimeFormat),
                 jobOffer.isRemotePossible(),
-                serializeTags(jobOffer.getTechnologyTags()), jobOffer.getSource()
+                serializeTags(jobOffer.getTechnologyTags()),
+                jobOffer.getSource(),
+                jobOffer.getCreatedAt().toString(dateTimeFormat)
         );
     }
 
@@ -52,8 +54,8 @@ public class JobConverter {
                 DateTime.parse(jobOfferEntity.getPosted(), dateTimeFormat),
                 jobOfferEntity.getRemotePossible(),
                 deserializeTags(jobOfferEntity.getTechnologyTags()),
-                jobOfferEntity.getSource()
-        );
+                jobOfferEntity.getSource(),
+                DateTime.parse(jobOfferEntity.getCreatedAt(), dateTimeFormat));
     }
 
     private String serializeTags(Set<String> tags) {
