@@ -5,6 +5,6 @@ sources:
     rootPath: /api/posting
     port: 443
     scheme: https
-    categories: backend, frontend
+    categories: backend, frontend, fullstack, projectmanager
     cities: warsaw
 # add machine-specific properties to application-default.yml

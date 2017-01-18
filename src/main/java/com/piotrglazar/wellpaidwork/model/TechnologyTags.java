@@ -36,7 +36,7 @@ public class TechnologyTags {
     }
 
     private Set<String> splitAndParse(String lowerCaseTechnology) {
-        String[] tokens = lowerCaseTechnology.split("[:/\\s\\.]");
+        String[] tokens = lowerCaseTechnology.split("[:/\\s\\.()]");
         Set<String> tags = Stream.of(tokens)
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())

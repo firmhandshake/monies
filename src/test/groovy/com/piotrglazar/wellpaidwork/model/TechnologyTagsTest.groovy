@@ -55,6 +55,17 @@ class TechnologyTagsTest extends Specification {
         tags == ["aws", "openstack"].toSet()
     }
 
+    def "should remove brackets"() {
+        given:
+        def technology = "(c or c++)"
+
+        when:
+        def tags = technologyTags.tags(technology)
+
+        then:
+        tags == ["c", "c++"].toSet()
+    }
+
     def "should process normal tags"() {
         when:
         def tags = technologyTags.tags(technology)

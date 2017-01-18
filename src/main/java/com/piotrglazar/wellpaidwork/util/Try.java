@@ -9,7 +9,7 @@ import java.util.function.Function;
 public class Try<T> {
 
     private final Optional<T> value;
-    private final Optional<Throwable> error;
+    private final Optional<Exception> error;
     private final boolean isSuccess;
 
     private Try(T value) {
@@ -18,9 +18,9 @@ public class Try<T> {
         this.isSuccess = true;
     }
 
-    private Try(Throwable t) {
+    private Try(Exception e) {
         this.value = Optional.empty();
-        this.error = Optional.ofNullable(t);
+        this.error = Optional.ofNullable(e);
         this.isSuccess = false;
     }
 
@@ -28,7 +28,7 @@ public class Try<T> {
         return new Try<>(value);
     }
 
-    public static <V extends Throwable> Try<?> failed(V failure) {
+    public static <V extends Exception> Try<?> failed(V failure) {
         return new Try<>(failure);
     }
 
@@ -36,8 +36,8 @@ public class Try<T> {
         try {
             V value = supplier.call();
             return new Try<>(value);
-        } catch (Throwable t) {
-            return new Try<>(t);
+        } catch (Exception e) {
+            return new Try<>(e);
         }
     }
 
@@ -95,7 +95,7 @@ public class Try<T> {
         }
     }
 
-    public Throwable getException() {
+    public Exception getException() {
         if (isSuccess) {
             throw new NoSuchElementException();
         } else {
