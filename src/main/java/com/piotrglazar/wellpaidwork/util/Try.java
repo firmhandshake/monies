@@ -54,7 +54,7 @@ public class Try<T> {
         Objects.requireNonNull(mapper);
 
         if (isSuccess) {
-            return of(() -> mapper.apply(this.value.get()));
+            return of(() -> mapper.apply(value.get()));
         } else {
             return (Try<U>) this;
         }
@@ -64,15 +64,15 @@ public class Try<T> {
     public <U> Try<U> flatMap(Function<T, Try<U>> mapper) {
         Objects.requireNonNull(mapper);
 
-        if (isSuccess) {
-            return mapper.apply(this.value.get());
+        if (isSuccess && value.isPresent()) {
+            return mapper.apply(value.get());
         } else {
             return (Try<U>) this;
         }
     }
 
     public T get() {
-        if (isSuccess) {
+        if (isSuccess && value.isPresent()) {
             return value.get();
         } else {
             throw new NoSuchElementException();
@@ -80,7 +80,7 @@ public class Try<T> {
     }
 
     public T getOrElse(T defaultValue) {
-        if (isSuccess) {
+        if (isSuccess && value.isPresent()) {
             return value.get();
         } else {
             return defaultValue;
@@ -88,18 +88,22 @@ public class Try<T> {
     }
 
     public T recover(Function<? super Throwable, ? extends T> recovery) {
-        if (isSuccess) {
+        if (isSuccess && value.isPresent()) {
             return value.get();
-        } else {
+        } else if (error.isPresent()) {
             return recovery.apply(error.get());
+        } else {
+            throw new IllegalStateException("Unknown state neither value nor error is present!");
         }
     }
 
     public Exception getException() {
         if (isSuccess) {
             throw new NoSuchElementException();
-        } else {
+        } else if (error.isPresent()) {
             return error.get();
+        } else {
+            throw new IllegalStateException("Unknown state neither value nor error is present!");
         }
     }
 }

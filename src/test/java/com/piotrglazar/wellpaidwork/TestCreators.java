@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 public interface TestCreators {
 
@@ -33,7 +34,7 @@ public interface TestCreators {
         return new JobOffer(id, "name", "city", Category.BACKEND, "title", Collections.emptySet(),
                 Position.DEVELOPER, new Salary(10, 100, Period.MONTH, Currency.PLN),
                 EmploymentType.PERMANENT, DateTime.parse("2017-01-01"), false, Collections.emptySet(),
-                JobOfferSource.TEST, DateTime.parse("2017-01-01"));
+                JobOfferSource.TEST, DateTime.parse("2017-01-01"), Optional.empty());
     }
 
     default JobResults jobResults(JobOffer... jobOffers) {

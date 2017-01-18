@@ -4,6 +4,8 @@ import com.piotrglazar.wellpaidwork.model.Category;
 import com.piotrglazar.wellpaidwork.model.EmploymentType;
 import com.piotrglazar.wellpaidwork.model.Position;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -12,10 +14,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
+import java.util.Optional;
 
 @Entity
 @Table(indexes = @Index(name = "IDX_EID_SOURCE", columnList = "external_id,source", unique = true))
+@SecondaryTable(name="original_salary", pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"))
 public class JobOfferEntity {
 
     @Id
@@ -70,13 +76,28 @@ public class JobOfferEntity {
     @Column(nullable = false)
     private String createdAt;
 
+    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "lowerBound", column = @Column(name = "original_lower_bound")),
+//            @AttributeOverride(name = "upperBound", column = @Column(name = "original_upper_bound")),
+//            @AttributeOverride(name = "period", column = @Column(name = "original_period")),
+//            @AttributeOverride(name = "currency", column = @Column(name = "original_currency"))
+//    })
+    @AttributeOverrides(
+            {@AttributeOverride(name = "lowerBound", column = @Column(table = "original_salary")),
+                    @AttributeOverride(name = "upperBound", column = @Column(table = "original_salary")),
+                    @AttributeOverride(name = "period", column = @Column(table = "original_salary")),
+                    @AttributeOverride(name = "currency", column = @Column(table = "original_salary"))}
+    )
+    private SalaryEntity originalSalary;
+
     protected JobOfferEntity() {
         // persistence constructor
     }
 
     public JobOfferEntity(String externalId, String name, String city, Category category, String title,
                           String titleTags, Position position, SalaryEntity salary, EmploymentType employmentType, String posted, Boolean remotePossible,
-                          String technologyTags, JobOfferSource source, String createdAt) {
+                          String technologyTags, JobOfferSource source, String createdAt, Optional<SalaryEntity> originalSalary) {
         this.externalId = externalId;
         this.name = name;
         this.city = city;
@@ -91,6 +112,7 @@ public class JobOfferEntity {
         this.technologyTags = technologyTags;
         this.source = source;
         this.createdAt = createdAt;
+        this.originalSalary = originalSalary.orElse(null);
     }
 
     public Long getId() {
@@ -207,5 +229,17 @@ public class JobOfferEntity {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public SalaryEntity getOriginalSalary() {
+        return originalSalary;
+    }
+
+    public Optional<SalaryEntity> getOriginalSalaryOpt() {
+        return Optional.ofNullable(originalSalary);
+    }
+
+    public void setOriginalSalary(SalaryEntity originalSalary) {
+        this.originalSalary = originalSalary;
     }
 }

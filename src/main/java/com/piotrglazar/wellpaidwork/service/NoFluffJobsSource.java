@@ -51,13 +51,12 @@ public class NoFluffJobsSource implements JobSource {
             List<CompletableFuture<Optional<JobOffer>>> jobOffersFuture = jobs.stream()
                     .map(this::fetchJobOffer)
                     .collect(Collectors.toList());
-            List<JobOffer> jobOffers = getJobOffers(jobOffersFuture)
+
+            return getJobOffers(jobOffersFuture)
                     .stream()
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList());
-
-            return jobOffers;
         } else {
             return Collections.emptyList();
         }

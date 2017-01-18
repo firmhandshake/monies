@@ -24,7 +24,7 @@ public class TitleTags {
     }
 
     public Set<String> tags(String rawTitle) {
-        String[] tokens = rawTitle.toLowerCase().split("[/\\s\\.,]");
+        String[] tokens = rawTitle.toLowerCase().split("[/\\s\\.,()]");
         return Stream.of(tokens)
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
