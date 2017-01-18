@@ -3,12 +3,12 @@ front-end => frontend
 lead => leader
 qa => quality assurance
 sr => senior
+net => .net
 
 # tags
 java
 scala
 developer
-.net
 remote
 senior
 expert
@@ -48,3 +48,5 @@ aws
 python
 junior
 oracle
+html5
+chief

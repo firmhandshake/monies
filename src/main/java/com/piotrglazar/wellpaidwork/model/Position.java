@@ -15,6 +15,7 @@ public enum Position {
     MANAGER,
     RECRUITER,
     ARCHITECT,
+    CHIEF,
     EXPERT;
 
     private static final Map<String, Position> names = ImmutableMap.copyOf(Stream.of(Position.values())

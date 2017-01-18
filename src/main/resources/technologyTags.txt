@@ -10,6 +10,10 @@ gnu => linux
 jee => javaee
 go => golang
 ror => ruby on rails
+unix => linux
+rabbit mq => rabbitmq
+react => reactjs
+ms sqlserver => mssql
 
 # content
 html5
@@ -47,6 +51,13 @@ golang
 r
 ruby
 pl/sql
+php
+groovy
+jvm
+closure
+coffeescript
+typescript
+lua
 
 # tools
 git
@@ -78,6 +89,19 @@ grunt
 office 365
 cloud foundry
 elixir
+photoshop
+vagrant
+puppet
+babel
+browserify
+clojurescript
+github
+backbone
+burp
+selenium
+grails
+sybase
+iis
 
 # databases
 mssql
@@ -91,6 +115,10 @@ memcached
 elasticsearch
 sqlite
 redshift
+cassandra
+kafka
+db2
+rabbitmq
 
 # misc
 functional programming
@@ -99,6 +127,12 @@ machine learning
 linux
 database optimization
 embedded
+nosql
+cryptography
+ios
+android
+amqp
+sap
 
 # frameworks
 spring
@@ -125,3 +159,14 @@ hadoop
 hive
 ruby on rails
 bootstrap
+flash
+flex
+akka
+play framework
+gwt
+pylons
+coldfusion
+ember
+scss
+haml
+asp.net
