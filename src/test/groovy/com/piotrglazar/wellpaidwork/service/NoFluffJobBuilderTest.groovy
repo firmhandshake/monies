@@ -48,6 +48,7 @@ class NoFluffJobBuilderTest extends Specification {
             source == JobOfferSource.NO_FLUFF_JOBS
             createdAt == DateTime.parse("2017-01-01")
             originalSalary == Optional.of(new Salary(10, 100, Period.DAY, Currency.PLN))
+            id == Optional.empty()
         }
     }
 

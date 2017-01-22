@@ -10,6 +10,7 @@ import com.piotrglazar.wellpaidwork.model.Position;
 import com.piotrglazar.wellpaidwork.model.Salary;
 import com.piotrglazar.wellpaidwork.model.dao.JobOfferDao;
 import com.piotrglazar.wellpaidwork.model.db.JobOfferSource;
+import com.piotrglazar.wellpaidwork.service.JobMigrator;
 import com.piotrglazar.wellpaidwork.service.SalaryConversionService;
 import com.piotrglazar.wellpaidwork.util.Try;
 import org.assertj.core.api.Assertions;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +41,9 @@ public class WellPaidWorkApplicationTests {
 
     @Autowired
     private SalaryConversionService salaryConversionService;
+
+    @Autowired
+    private JobMigrator jobMigrator;
 
     @Test
     public void shouldLoadContext() {
@@ -75,7 +80,7 @@ public class WellPaidWorkApplicationTests {
                 DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
                 JobOfferSource.TEST, DateTime.parse("2017-01-01"),
                 Optional.of(new Salary(180000, 216000, Period.YEAR, Currency.PLN)));
-        dao.save(jobOffer);
+        Long id = dao.save(jobOffer).get();
 
         // when
         Optional<JobOffer> foundOffer = dao.find("fancy", JobOfferSource.TEST);
@@ -83,7 +88,7 @@ public class WellPaidWorkApplicationTests {
         // then
         assertThat(foundOffer)
                 .isPresent()
-                .hasValue(jobOffer);
+                .hasValue(jobOffer.withId(id));
     }
 
     @Test
@@ -142,5 +147,27 @@ public class WellPaidWorkApplicationTests {
         // then
         assertThat(convertedSalary)
                 .isEmpty();
+    }
+
+    @Test
+    public void shouldMigrateEntryWhichHasUnconvertedSalary() {
+        // given
+        JobOffer jobOffer = new JobOffer("migrate", "name", "city", Category.BACKEND, "senior developer",
+                ImmutableSet.of("senior", "developer"), Position.DEVELOPER, new Salary(144000,
+                216000, Period.YEAR, Currency.PLN), EmploymentType.PERMANENT,
+                DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
+                JobOfferSource.TEST, DateTime.parse("2017-01-01"), Optional.empty());
+        assertThat(dao.save(jobOffer).isSuccess());
+
+        // when
+        List<JobOffer> migrated = jobMigrator.migrate();
+
+        // then
+        assertThat(migrated).hasSize(1);
+        assertThat(migrated.get(0)).extracting(jo -> jo.getSalary().getPeriod()).containsOnly(Period.MONTH);
+        assertThat(dao.find("migrate", JobOfferSource.TEST))
+                .isPresent()
+                .hasValueSatisfying(o -> assertThat(o.getSalary()).isEqualTo(new Salary(12000, 18000, Period.MONTH, Currency.PLN)))
+                .hasValueSatisfying(o -> assertThat(o.getOriginalSalary()).isPresent().hasValue(jobOffer.getSalary()));
     }
 }
