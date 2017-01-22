@@ -28,15 +28,14 @@ public class JobConverter {
                 jobOffer.getCategory(),
                 jobOffer.getTitle(),
                 serializeTags(jobOffer.getTitleTags()), jobOffer.getPosition(),
-                new SalaryEntity(jobOffer.getSalary().getLowerBound(),
-                        jobOffer.getSalary().getUpperBound(),
-                        jobOffer.getSalary().getPeriod(),
-                        jobOffer.getSalary().getCurrency()), jobOffer.getEmploymentType(),
+                toDb(jobOffer.getSalary()),
+                jobOffer.getEmploymentType(),
                 jobOffer.getPosted().toString(dateTimeFormat),
                 jobOffer.isRemotePossible(),
                 serializeTags(jobOffer.getTechnologyTags()),
                 jobOffer.getSource(),
-                jobOffer.getCreatedAt().toString(dateTimeFormat)
+                jobOffer.getCreatedAt().toString(dateTimeFormat),
+                jobOffer.getOriginalSalary().map(this::toDb)
         );
     }
 
@@ -55,7 +54,8 @@ public class JobConverter {
                 jobOfferEntity.getRemotePossible(),
                 deserializeTags(jobOfferEntity.getTechnologyTags()),
                 jobOfferEntity.getSource(),
-                DateTime.parse(jobOfferEntity.getCreatedAt(), dateTimeFormat));
+                DateTime.parse(jobOfferEntity.getCreatedAt(), dateTimeFormat),
+                jobOfferEntity.getOriginalSalaryOpt().map(this::fromDb));
     }
 
     private String serializeTags(Set<String> tags) {
@@ -67,6 +67,14 @@ public class JobConverter {
                 .map(String::trim)
                 .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.toSet());
+    }
+
+    private SalaryEntity toDb(Salary salary) {
+        return new SalaryEntity(salary.getLowerBound(),
+                salary.getUpperBound(),
+                salary.getPeriod(),
+                salary.getCurrency()
+        );
     }
 
     private Salary fromDb(SalaryEntity salaryEntity) {

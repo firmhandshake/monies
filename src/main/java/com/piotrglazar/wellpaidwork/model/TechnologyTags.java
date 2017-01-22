@@ -26,10 +26,10 @@ public class TechnologyTags {
     public Set<String> tags(String rawTechnology) {
         String lowerCaseTechnology = rawTechnology.toLowerCase();
 
-        Set<String> tags = toTechTagsSet(lowerCaseTechnology);
+        Set<String> tokenizedTags = toTechTagsSet(lowerCaseTechnology);
 
-        if (!tags.isEmpty()) {
-            return tags;
+        if (!tokenizedTags.isEmpty()) {
+            return tokenizedTags;
         } else {
             return splitAndParse(lowerCaseTechnology);
         }
@@ -37,15 +37,15 @@ public class TechnologyTags {
 
     private Set<String> splitAndParse(String lowerCaseTechnology) {
         String[] tokens = lowerCaseTechnology.split("[:/\\s\\.()]");
-        Set<String> tags = Stream.of(tokens)
+        Set<String> tokenizedTags = Stream.of(tokens)
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .flatMap(this::toTitleTags)
                 .collect(Collectors.toSet());
-        if (tags.isEmpty()) {
+        if (tokenizedTags.isEmpty()) {
             logger.info("Unknown technology token {}", lowerCaseTechnology);
         }
-        return tags;
+        return tokenizedTags;
     }
 
     private Stream<String> toTitleTags(String rawToken) {

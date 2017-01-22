@@ -17,12 +17,13 @@ class NoFluffJobBuilderTest extends Specification {
 
     def jobPostedDate = DateTime.parse("2017-01-01")
 
-    def builder = new NoFluffJobBuilder(dummyTitleTags(), dummyTechnologyTags(), testDateTimeProvider)
+    def builder = new NoFluffJobBuilder(dummyTitleTags(), dummyTechnologyTags(), testDateTimeProvider,
+            new SalaryConversionService([new DailyToMonthlySalaryConverter()]))
 
     def "should build job from no fluff jobs data"() {
         given:
         def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 100, 2, 1)
-        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100, 0),
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "day", 10, 100, 0),
                 new NoFluffJobTitle("backend", "title", "developer"), Collections.singletonList(new NoFluffTechnology(0, "t")), Collections.emptyList(),
                 Collections.emptyList())
 
@@ -39,13 +40,32 @@ class NoFluffJobBuilderTest extends Specification {
             position == Position.DEVELOPER
             title == "title"
             titleTags == ["titleTag"].toSet()
-            salary == new Salary(10, 100, Period.MONTH, Currency.PLN)
+            salary == new Salary(208, 2083, Period.MONTH, Currency.PLN)
             employmentType == EmploymentType.PERMANENT
             posted == jobPostedDate
             remotePossible
             technologyTags == ["technologyTag"].toSet()
             source == JobOfferSource.NO_FLUFF_JOBS
             createdAt == DateTime.parse("2017-01-01")
+            originalSalary == Optional.of(new Salary(10, 100, Period.DAY, Currency.PLN))
+        }
+    }
+
+    def "should have empty original salary if salary doesn't need conversion"() {
+        given:
+        def job = new NoFluffJob("id1", "name", "city", "backend", "title", "developer", 100, 2, 1)
+        def details = new NoFluffJobDetails("id1", jobPostedDate, new NoFluffJobEssentials("permanent", "pln", "month", 10, 100, 0),
+                new NoFluffJobTitle("backend", "title", "developer"), Collections.singletonList(new NoFluffTechnology(0, "t")), Collections.emptyList(),
+                Collections.emptyList())
+
+        when:
+        def offer = builder.toJobOffer(job, details)
+
+        then:
+        offer.isSuccess()
+        with(offer.get()) {
+            salary == new Salary(10, 100, Period.MONTH, Currency.PLN)
+            originalSalary == Optional.empty()
         }
     }
 

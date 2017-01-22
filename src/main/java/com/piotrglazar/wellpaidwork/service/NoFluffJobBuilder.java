@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,37 +25,46 @@ public class NoFluffJobBuilder {
     private final TitleTags titleTags;
     private final TechnologyTags technologyTags;
     private final DateTimeProvider dateTimeProvider;
+    private final SalaryConversionService conversionService;
 
     @Autowired
-    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags, DateTimeProvider dateTimeProvider) {
+    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags, DateTimeProvider dateTimeProvider,
+                             SalaryConversionService conversionService) {
         this.titleTags = titleTags;
         this.technologyTags = technologyTags;
         this.dateTimeProvider = dateTimeProvider;
+        this.conversionService = conversionService;
     }
 
     public Try<JobOffer> toJobOffer(NoFluffJob job, NoFluffJobDetails details) {
         return employmentType(details).flatMap(employmentType ->
                 salary(details).flatMap(salary ->
                     category(details).flatMap(category ->
-                        position(details).map(position -> new JobOffer(
-                            job.getId(),
-                            job.getName(),
-                            job.getCity(),
-                            category,
-                            details.getTitle().getTitle(),
-                            titleTags.tags(details.getTitle().getTitle()),
-                            position,
-                            salary,
-                            employmentType,
-                            details.getPosted(),
-                            job.isRemoteWorkPossible(),
-                            technologyTags(details),
-                            JobOfferSource.NO_FLUFF_JOBS,
-                            dateTimeProvider.get())
-                        )
+                        position(details).map(position -> buildJobOffer(job, details, employmentType, salary, category,
+                                position))
                     )
                 )
         );
+    }
+
+    private JobOffer buildJobOffer(NoFluffJob job, NoFluffJobDetails details, EmploymentType employmentType, Salary salary, Category category, Position position) {
+        Optional<Salary> convertedSalary = conversionService.convertSalary(salary);
+        return new JobOffer(
+            job.getId(),
+            job.getName(),
+            job.getCity(),
+            category,
+            details.getTitle().getTitle(),
+            titleTags.tags(details.getTitle().getTitle()),
+            position,
+            convertedSalary.orElse(salary),
+            employmentType,
+            details.getPosted(),
+            job.isRemoteWorkPossible(),
+            technologyTags(details),
+            JobOfferSource.NO_FLUFF_JOBS,
+            dateTimeProvider.get(),
+            convertedSalary.map(convertedSalaryAlreadyUsed -> salary));
     }
 
     private Try<Salary> salary(NoFluffJobDetails details) {

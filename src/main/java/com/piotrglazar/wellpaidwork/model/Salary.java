@@ -49,8 +49,12 @@ public class Salary {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Salary salary = (Salary) o;
         return lowerBound == salary.lowerBound &&
                 upperBound == salary.upperBound &&

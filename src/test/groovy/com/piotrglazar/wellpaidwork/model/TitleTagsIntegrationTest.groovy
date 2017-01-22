@@ -64,6 +64,17 @@ class TitleTagsIntegrationTest extends Specification {
         tags == ["c++", "c", "developer"].toSet()
     }
 
+    def "should also split by parens"() {
+        given:
+        def title = "(Senior/Lead) Frontend"
+
+        when:
+        def tags = titleTags.tags(title)
+
+        then:
+        tags == ["senior", "leader", "frontend"].toSet()
+    }
+
     def setupSpec() {
         def file = "titleTags.txt"
         def reader = new TagFileReader()
