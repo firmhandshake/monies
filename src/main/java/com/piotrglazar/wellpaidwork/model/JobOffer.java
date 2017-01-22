@@ -1,5 +1,6 @@
 package com.piotrglazar.wellpaidwork.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
@@ -103,6 +104,7 @@ public class JobOffer {
         return createdAt;
     }
 
+    @JsonSerialize(using = OptionalSerializer.class)
     public Optional<Salary> getOriginalSalary() {
         return originalSalary;
     }

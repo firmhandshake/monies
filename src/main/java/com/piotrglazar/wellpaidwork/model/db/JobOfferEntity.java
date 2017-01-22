@@ -77,18 +77,12 @@ public class JobOfferEntity {
     private String createdAt;
 
     @Embedded
-//    @AttributeOverrides({
-//            @AttributeOverride(name = "lowerBound", column = @Column(name = "original_lower_bound")),
-//            @AttributeOverride(name = "upperBound", column = @Column(name = "original_upper_bound")),
-//            @AttributeOverride(name = "period", column = @Column(name = "original_period")),
-//            @AttributeOverride(name = "currency", column = @Column(name = "original_currency"))
-//    })
-    @AttributeOverrides(
-            {@AttributeOverride(name = "lowerBound", column = @Column(table = "original_salary")),
-                    @AttributeOverride(name = "upperBound", column = @Column(table = "original_salary")),
-                    @AttributeOverride(name = "period", column = @Column(table = "original_salary")),
-                    @AttributeOverride(name = "currency", column = @Column(table = "original_salary"))}
-    )
+    @AttributeOverrides({
+        @AttributeOverride(name = "lowerBound", column = @Column(table = "original_salary")),
+        @AttributeOverride(name = "upperBound", column = @Column(table = "original_salary")),
+        @AttributeOverride(name = "period", column = @Column(table = "original_salary")),
+        @AttributeOverride(name = "currency", column = @Column(table = "original_salary"))
+    })
     private SalaryEntity originalSalary;
 
     protected JobOfferEntity() {
