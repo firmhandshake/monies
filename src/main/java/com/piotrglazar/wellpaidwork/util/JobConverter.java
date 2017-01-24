@@ -12,6 +12,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,12 +36,14 @@ public class JobConverter {
                 serializeTags(jobOffer.getTechnologyTags()),
                 jobOffer.getSource(),
                 jobOffer.getCreatedAt().toString(dateTimeFormat),
-                jobOffer.getOriginalSalary().map(this::toDb)
+                jobOffer.getOriginalSalary().map(this::toDb),
+                jobOffer.getId()
         );
     }
 
     public JobOffer fromDb(JobOfferEntity jobOfferEntity) {
         return new JobOffer(
+                Optional.ofNullable(jobOfferEntity.getId()),
                 jobOfferEntity.getExternalId(),
                 jobOfferEntity.getName(),
                 jobOfferEntity.getCity(),

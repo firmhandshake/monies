@@ -91,7 +91,9 @@ public class JobOfferEntity {
 
     public JobOfferEntity(String externalId, String name, String city, Category category, String title,
                           String titleTags, Position position, SalaryEntity salary, EmploymentType employmentType, String posted, Boolean remotePossible,
-                          String technologyTags, JobOfferSource source, String createdAt, Optional<SalaryEntity> originalSalary) {
+                          String technologyTags, JobOfferSource source, String createdAt,
+                          Optional<SalaryEntity> originalSalary, Optional<Long> id) {
+        this.id = id.orElse(null);
         this.externalId = externalId;
         this.name = name;
         this.city = city;

@@ -54,6 +54,7 @@ class NoFluffJobsFilterTest extends Specification implements TestCreators {
         filtered.empty
         1 * dao.findRaw(_, _) >> Optional.of(new JobOfferEntity("externalId", "name", "city", Category.BACKEND,
                 "title", "backend", Position.DEVELOPER, new SalaryEntity(14000, 18000, Period.MONTH, Currency.PLN),
-                EmploymentType.PERMANENT, "2017-01-01", false, "scala;java", JobOfferSource.TEST, "2017-01-01", Optional.empty()))
+                EmploymentType.PERMANENT, "2017-01-01", false, "scala;java", JobOfferSource.TEST, "2017-01-01",
+                Optional.empty(), Optional.empty()))
     }
 }

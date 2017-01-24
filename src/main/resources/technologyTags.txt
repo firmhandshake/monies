@@ -14,6 +14,7 @@ unix => linux
 rabbit mq => rabbitmq
 react => reactjs
 ms sqlserver => mssql
+electron.atom.io => electron
 
 # content
 html5
@@ -102,6 +103,8 @@ selenium
 grails
 sybase
 iis
+npm
+gimp
 
 # databases
 mssql
@@ -133,6 +136,8 @@ ios
 android
 amqp
 sap
+pubnub
+chrome extension api
 
 # frameworks
 spring
@@ -170,3 +175,12 @@ ember
 scss
 haml
 asp.net
+quartz
+cxf
+wsdl
+junit
+testng
+backbonejs
+wcf
+jbpm
+

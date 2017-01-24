@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class JobOffer {
 
+    private final Optional<Long> id;
     private final String externalId;
     private final String name;
     private final String city;
@@ -28,9 +29,10 @@ public class JobOffer {
     private final DateTime createdAt;
     private final Optional<Salary> originalSalary;
 
-    public JobOffer(String externalId, String name, String city, Category category, String title, Set<String> titleTags,
+    public JobOffer(Optional<Long> id, String externalId, String name, String city, Category category, String title, Set<String> titleTags,
                     Position position, Salary salary, EmploymentType employmentType, DateTime posted, boolean remotePossible,
                     Set<String> technologyTags, JobOfferSource source, DateTime createdAt, Optional<Salary> originalSalary) {
+        this.id = id;
         this.externalId = externalId;
         this.name = name;
         this.city = city;
@@ -46,6 +48,20 @@ public class JobOffer {
         this.source = source;
         this.createdAt = createdAt;
         this.originalSalary = originalSalary;
+    }
+
+    public JobOffer(Long id, String externalId, String name, String city, Category category, String title, Set<String> titleTags,
+                    Position position, Salary salary, EmploymentType employmentType, DateTime posted, boolean remotePossible,
+                    Set<String> technologyTags, JobOfferSource source, DateTime createdAt, Optional<Salary> originalSalary) {
+        this(Optional.of(id), externalId, name, city, category, title, titleTags, position, salary, employmentType,
+                posted, remotePossible, technologyTags, source, createdAt, originalSalary);
+    }
+
+    public JobOffer(String externalId, String name, String city, Category category, String title, Set<String> titleTags,
+                    Position position, Salary salary, EmploymentType employmentType, DateTime posted, boolean remotePossible,
+                    Set<String> technologyTags, JobOfferSource source, DateTime createdAt, Optional<Salary> originalSalary) {
+        this(Optional.empty(), externalId, name, city, category, title, titleTags, position, salary, employmentType,
+                posted, remotePossible, technologyTags, source, createdAt, originalSalary);
     }
 
     public String getExternalId() {
@@ -109,6 +125,11 @@ public class JobOffer {
         return originalSalary;
     }
 
+    @JsonSerialize(using = OptionalSerializer.class)
+    public Optional<Long> getId() {
+        return id;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) {
@@ -132,13 +153,14 @@ public class JobOffer {
                 Objects.equal(technologyTags, jobOffer.technologyTags) &&
                 source == jobOffer.source &&
                 Objects.equal(createdAt, jobOffer.createdAt) &&
-                Objects.equal(originalSalary, jobOffer.originalSalary);
+                Objects.equal(originalSalary, jobOffer.originalSalary) &&
+                Objects.equal(id, jobOffer.id);
     }
 
     @Override
     public final int hashCode() {
         return Objects.hashCode(externalId, name, city, category, title, titleTags, position, salary, employmentType,
-                posted, remotePossible, technologyTags, source, createdAt, originalSalary);
+                posted, remotePossible, technologyTags, source, createdAt, originalSalary, id);
     }
 
     @Override
@@ -159,6 +181,49 @@ public class JobOffer {
                 .add("source", source)
                 .add("createdAt", createdAt)
                 .add("originalSalary", originalSalary)
+                .add("id", id)
                 .toString();
+    }
+
+    public JobOffer updateSalary(Salary salary, Optional<Salary> originalSalary) {
+        return new JobOffer(
+                id,
+                externalId,
+                name,
+                city,
+                category,
+                title,
+                titleTags,
+                position,
+                salary,
+                employmentType,
+                posted,
+                remotePossible,
+                technologyTags,
+                source,
+                createdAt,
+                originalSalary
+        );
+    }
+
+    public JobOffer withId(Long id) {
+        return new JobOffer(
+                id,
+                externalId,
+                name,
+                city,
+                category,
+                title,
+                titleTags,
+                position,
+                salary,
+                employmentType,
+                posted,
+                remotePossible,
+                technologyTags,
+                source,
+                createdAt,
+                originalSalary
+        );
     }
 }

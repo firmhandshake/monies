@@ -9,7 +9,9 @@ import com.piotrglazar.wellpaidwork.util.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class JobOfferDao {
@@ -36,5 +38,12 @@ public class JobOfferDao {
 
     public Optional<JobOffer> find(String externalId, JobOfferSource source) {
         return findRaw(externalId, source).map(jobConverter::fromDb);
+    }
+
+    public List<JobOffer> all() {
+        return repository.findAll()
+                .stream()
+                .map(jobConverter::fromDb)
+                .collect(Collectors.toList());
     }
 }
