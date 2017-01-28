@@ -3,6 +3,7 @@ package com.piotrglazar.wellpaidwork.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.piotrglazar.wellpaidwork.model.CityTags;
 import com.piotrglazar.wellpaidwork.model.TechnologyTags;
 import com.piotrglazar.wellpaidwork.model.TitleTags;
 import com.piotrglazar.wellpaidwork.util.DateTimeProvider;
@@ -29,6 +30,7 @@ public class ApplicationConfiguration {
 
     private static final String TECHNOLOGY_TAGS_FILE = "technologyTags.txt";
     private static final String TITLE_TAGS_FILE = "titleTags.txt";
+    private static final String CITY_TAGS_FILE = "cityTags.txt";
 
     @Autowired
     private TagFileReader tagFileReader;
@@ -54,6 +56,11 @@ public class ApplicationConfiguration {
     @Bean
     public TitleTags titleTags() {
         return fromTagFile(TITLE_TAGS_FILE, tf -> new TitleTags(tf.getTags(), tf.getSynonyms()));
+    }
+
+    @Bean
+    public CityTags cityTags() {
+        return fromTagFile(CITY_TAGS_FILE, tf -> new CityTags(tf.getTags(), tf.getSynonyms()));
     }
 
     @Bean

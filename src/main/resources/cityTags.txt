@@ -1,0 +1,14 @@
+warszawa => Warsaw
+kraków => Cracow
+remote => Remote
+
+Warsaw
+Cracow
+London
+Hamburg
+Gdańsk
+Łódź
+Gdynia
+Poznań
+Remote
+Wrocław

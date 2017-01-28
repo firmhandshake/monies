@@ -1,6 +1,7 @@
 # synonyms
 ecmascript 2015 => javascript6
 angular => angularjs
+angular2 => angularjs2
 js => javascript
 soa => microservices
 node => nodejs
@@ -8,6 +9,7 @@ es6 => javascript6
 embedded experience => embedded
 gnu => linux
 jee => javaee
+j2ee => javaee
 go => golang
 ror => ruby on rails
 unix => linux
@@ -15,6 +17,16 @@ rabbit mq => rabbitmq
 react => reactjs
 ms sqlserver => mssql
 electron.atom.io => electron
+iot => internet of things
+wifi => wireless
+postresql => postgresql
+vr => virtual reality
+ci => continuous integration
+mongo => mongodb
+sonar => sonarqube
+couchdb => couchbase
+oralce => oracle
+backbone => backbonejs
 
 # content
 html5
@@ -36,12 +48,14 @@ web services
 mvc
 continuous integration
 clean code
+saas
 
 # languages
 java
 java8
 scala
 c++
+c++11
 javascript
 javaee
 c#
@@ -59,6 +73,7 @@ closure
 coffeescript
 typescript
 lua
+objective-c
 
 # tools
 git
@@ -108,6 +123,31 @@ gimp
 qlik
 tableau
 kimball
+unity
+unreal engine
+rtos
+solr
+lucene
+yocto
+xamarin
+sonarqube
+jvisualvm
+heroku
+terraform
+emacs
+vim
+pixijs
+jmeter
+activiti
+drools
+grape
+wit.ai
+yarn
+kanzi studio
+adobe cc
+phing
+behat
+capistrano
 
 # databases
 mssql
@@ -125,6 +165,10 @@ cassandra
 kafka
 db2
 rabbitmq
+activemq
+hazelcast
+couchbase
+mariadb
 
 # misc
 functional programming
@@ -141,6 +185,20 @@ amqp
 sap
 pubnub
 chrome extension api
+internet of things
+nfc
+bluetooth
+arm
+pcb design
+wireless
+virtual reality
+gsm
+gps
+satellite communications
+etl
+messaging queue
+soap
+ajax
 
 # frameworks
 spring
@@ -148,6 +206,7 @@ reactjs
 jms
 springboot
 angularjs
+angularjs2
 redux
 directx
 opengl
@@ -186,4 +245,32 @@ testng
 backbonejs
 wcf
 jbpm
+stl
+boost
+symfony
+doctrine
+laravel
+phalcon
+jsp
+jsf
+struts
+mule esb
+presta
+magento
+websockets
+webgl
+ejb
+arquilian
+jest
+emberjs
+hanami
+padrino
+phpunit
+bower
 
+# servers
+tomcat
+jboss
+apache
+netty
+wildfly

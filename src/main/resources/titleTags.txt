@@ -6,6 +6,8 @@ sr => senior
 net => .net
 full-stack => fullstack
 bi => business intelligence
+js => javascript
+back-end => backend
 
 # tags
 java
@@ -52,3 +54,7 @@ junior
 oracle
 html5
 chief
+backend
+php
+embedded
+jee

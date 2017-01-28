@@ -19,9 +19,18 @@ class NoFluffJobBuilderTest extends Specification implements TestCreators {
 
     def jobPostedDate = DateTime.parse("2017-01-01")
 
-    def builder = new NoFluffJobBuilder(dummyTitleTags(), dummyTechnologyTags(), testDateTimeProvider,
+    def tagService = Mock(TagService)
+
+    def builder = new NoFluffJobBuilder(testDateTimeProvider,
             new SalaryConversionService([new DailyToMonthlySalaryConverter()],
-                    new CurrencyConversionService(new CurrencyConfig("PLN", ImmutableMap.of("EUR", new BigDecimal(4))))))
+                    new CurrencyConversionService(new CurrencyConfig("PLN", ImmutableMap.of("EUR", new BigDecimal(4))))),
+            tagService)
+
+    def setup() {
+        tagService.titleTags(_) >> ["titleTag"].toSet()
+        tagService.technologyTags(_) >> ["technologyTag"].toSet()
+        tagService.cityTag(_) >> "City"
+    }
 
     def "should build job from no fluff jobs data"() {
         given:
@@ -38,7 +47,7 @@ class NoFluffJobBuilderTest extends Specification implements TestCreators {
         with(offer.get()) {
             externalId == "id1"
             name == "name"
-            city == "city"
+            city == "City"
             category == Category.BACKEND
             position == Position.DEVELOPER
             title == "title"
@@ -121,23 +130,5 @@ class NoFluffJobBuilderTest extends Specification implements TestCreators {
         then:
         offer.isFailure()
         offer.getException() instanceof CategoryNotFoundException
-    }
-
-    private static dummyTitleTags() {
-        new TitleTags([].toSet(), [:]) {
-            @Override
-            Set<String> tags(String rawTitle) {
-                return ["titleTag"].toSet()
-            }
-        }
-    }
-
-    private static dummyTechnologyTags() {
-        new TechnologyTags([].toSet(), [:]) {
-            @Override
-            Set<String> tags(String rawTechnology) {
-                return ["technologyTag"].toSet()
-            }
-        }
     }
 }

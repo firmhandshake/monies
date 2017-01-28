@@ -4,8 +4,6 @@ import com.piotrglazar.wellpaidwork.DummyConversionService
 import com.piotrglazar.wellpaidwork.TestCreators
 import com.piotrglazar.wellpaidwork.TestDateTimeProvider
 import com.piotrglazar.wellpaidwork.api.NoFluffJobsClient
-import com.piotrglazar.wellpaidwork.model.TechnologyTags
-import com.piotrglazar.wellpaidwork.model.TitleTags
 import com.piotrglazar.wellpaidwork.model.dao.JobOfferDao
 import com.piotrglazar.wellpaidwork.util.Try
 import spock.lang.Specification
@@ -23,10 +21,10 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
     def "should fetch jobs from no fluff page"() {
         given:
         def dao = Mock(JobOfferDao)
+        def tagService = Mock(TagService)
         def client = Mock(NoFluffJobsClient)
         def source = new NoFluffJobsSource(client, filter(dao),
-                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:]),
-                        new TestDateTimeProvider(), new DummyConversionService()))
+                new NoFluffJobBuilder(new TestDateTimeProvider(), new DummyConversionService(), tagService))
 
         when:
         def found = source.fetch()
@@ -38,6 +36,9 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         )
         1 * client.getJobDetailsAsync(backendJob) >> CompletableFuture.completedFuture(Optional.of(backendJobDetails))
         0 * client.getJobDetails(hrJob)
+        tagService.cityTag(_) >> "warsaw"
+        tagService.technologyTags(_) >> [].toSet()
+        tagService.titleTags(_) >> [].toSet()
         found.size() == 1
         found.category == [BACKEND]
         found.city == ["warsaw"]
