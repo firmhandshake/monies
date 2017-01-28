@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class TechnologyTags {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Set<String> tags;
     private final Map<String, String> synonyms;
@@ -43,7 +43,7 @@ public class TechnologyTags {
                 .flatMap(this::toTitleTags)
                 .collect(Collectors.toSet());
         if (tokenizedTags.isEmpty()) {
-            logger.info("Unknown technology token {}", lowerCaseTechnology);
+            LOGGER.info("Unknown technology token {}", lowerCaseTechnology);
         }
         return tokenizedTags;
     }

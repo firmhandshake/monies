@@ -105,6 +105,9 @@ sybase
 iis
 npm
 gimp
+qlik
+tableau
+kimball
 
 # databases
 mssql

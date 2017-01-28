@@ -25,8 +25,8 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         def dao = Mock(JobOfferDao)
         def client = Mock(NoFluffJobsClient)
         def source = new NoFluffJobsSource(client, filter(dao),
-                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]),
-                        new TechnologyTags([].toSet(), [:]), new TestDateTimeProvider(), new DummyConversionService()))
+                new NoFluffJobBuilder(new TitleTags([].toSet(), [:]), new TechnologyTags([].toSet(), [:]),
+                        new TestDateTimeProvider(), new DummyConversionService()))
 
         when:
         def found = source.fetch()

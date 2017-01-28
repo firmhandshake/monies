@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class JobSaver {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final JobOfferDao jobOfferDao;
 
@@ -28,7 +28,7 @@ public class JobSaver {
 
     @EventListener
     public void processJobs(JobResults jobResults) {
-        logger.info("Got job results event!");
+        LOGGER.info("Got job results event!");
 
         List<Try<Long>> savedJobs = jobResults.getJobs()
                 .stream()
@@ -38,6 +38,6 @@ public class JobSaver {
         long duplicated = savedJobs.stream().filter(Try::isFailure).map(Try::getException).filter(e -> e instanceof DataIntegrityViolationException).count();
         long failed = savedJobs.stream().filter(Try::isFailure).map(Try::getException).filter(e -> !(e instanceof DataIntegrityViolationException)).count();
 
-        logger.info("{} jobs successfully saved, {} duplicated and {} failed", successfullySaved, duplicated, failed);
+        LOGGER.info("{} jobs successfully saved, {} duplicated and {} failed", successfullySaved, duplicated, failed);
     }
 }

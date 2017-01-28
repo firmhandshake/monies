@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @Component
 public class TagFileReader {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public Try<TagFile> readTagsFrom(String filePath) {
         return readRawTagsFrom(filePath).map(this::processRawTags);
@@ -74,12 +74,12 @@ public class TagFileReader {
                 .map(String::trim)
                 .collect(Collectors.toList());
         if (parts.size() < 2) {
-            logger.error("Failed to convert line {} to pair", line);
+            LOGGER.error("Failed to convert line {} to pair", line);
             return Optional.empty();
         } else if (parts.size() == 2) {
             return Optional.of(Pair.of(parts.get(0), parts.get(1)));
         } else {
-            logger.warn("Too many parts {} in line {}, will take first two", parts, line);
+            LOGGER.warn("Too many parts {} in line {}, will take first two", parts, line);
             return Optional.of(Pair.of(parts.get(0), parts.get(1)));
         }
     }

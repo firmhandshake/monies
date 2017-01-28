@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class Engine {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final List<JobSource> sources;
 
@@ -33,7 +33,7 @@ public class Engine {
     public JobResults fetchJobs() {
         List<String> descriptions = sources.stream().map(JobSource::description).collect(Collectors.toList());
         String descriptionsMessage = Joiner.on(", ").join(descriptions);
-        logger.info("About to fetch jobs from {} sources: {}", sources.size(), descriptionsMessage);
+        LOGGER.info("About to fetch jobs from {} sources: {}", sources.size(), descriptionsMessage);
 
         List<JobOffer> jobs = findJobs();
 

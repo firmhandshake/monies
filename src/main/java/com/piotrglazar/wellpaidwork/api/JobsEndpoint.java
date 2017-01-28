@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 public class JobsEndpoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Engine engine;
     private final JobMigrator jobMigrator;
@@ -29,7 +29,7 @@ public class JobsEndpoint {
 
     @RequestMapping("/jobs")
     public JobResults fetchJobs() {
-        logger.info("About to fetch jobs");
+        LOGGER.info("About to fetch jobs");
         return engine.fetchJobs();
     }
 

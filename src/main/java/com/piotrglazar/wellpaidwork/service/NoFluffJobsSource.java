@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class NoFluffJobsSource implements JobSource {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final NoFluffJobsClient client;
     private final NoFluffJobsFilter filter;
@@ -46,7 +46,7 @@ public class NoFluffJobsSource implements JobSource {
         if (jobPostings.isPresent()) {
             NoFluffJobPostings noFluffJobPostings = jobPostings.get();
             List<NoFluffJob> jobs = filter.filterRelevantJobs(noFluffJobPostings.getPostings());
-            logger.info("Found {} jobs, {} are relevant", noFluffJobPostings.getPostings().size(), jobs.size());
+            LOGGER.info("Found {} jobs, {} are relevant", noFluffJobPostings.getPostings().size(), jobs.size());
 
             List<CompletableFuture<Optional<JobOffer>>> jobOffersFuture = jobs.stream()
                     .map(this::fetchJobOffer)
@@ -65,20 +65,20 @@ public class NoFluffJobsSource implements JobSource {
     private List<Optional<JobOffer>> getJobOffers(List<CompletableFuture<Optional<JobOffer>>> jobOffersFuture) {
         return Try.of(() -> FutureUtils.asList(jobOffersFuture).get())
                 .recover(error -> {
-                    logger.error("Waiting for async job details fetch failed", error);
+                    LOGGER.error("Waiting for async job details fetch failed", error);
                     return Collections.emptyList();
                 });
     }
 
     private CompletableFuture<Optional<JobOffer>> fetchJobOffer(NoFluffJob job) {
         return client.getJobDetailsAsync(job).thenApply(detailsOpt -> detailsOpt.flatMap(details -> {
-            logger.info("Fetched job details for {}", details.getId());
+            LOGGER.info("Fetched job details for {}", details.getId());
             Try<JobOffer> jobOfferTry = jobBuilder.toJobOffer(job, details);
             if (jobOfferTry.isSuccess()) {
-                logger.info("Successfully build job offer for {}", details.getId());
+                LOGGER.info("Successfully build job offer for {}", details.getId());
                 return Optional.of(jobOfferTry.get());
             } else {
-                logger.info("Failed to build job offer for {}", details.getId());
+                LOGGER.error("Failed to build job offer for " + details.getId(), jobOfferTry.getException());
                 return Optional.empty();
             }
         }));

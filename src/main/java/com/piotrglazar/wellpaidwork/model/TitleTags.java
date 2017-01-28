@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class TitleTags {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Map<String, String> synonyms;
     private final Set<String> tags;
@@ -38,7 +38,7 @@ public class TitleTags {
         } else if (synonyms.containsKey(rawToken)) {
             return Stream.of(synonyms.get(rawToken));
         } else {
-            logger.info("Unknown title token {}", rawToken);
+            LOGGER.info("Unknown title token {}", rawToken);
             return Stream.empty();
         }
     }
