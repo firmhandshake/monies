@@ -1,4 +1,3 @@
-sense.of.the.universe: 42
 sources:
   nofluffjobs:
     host: nofluffjobs.com
@@ -7,4 +6,10 @@ sources:
     scheme: https
     categories: backend, frontend, fullstack, projectmanager
     cities: warsaw
+currencies:
+  base: PLN
+  conversions:
+    EUR: 4.37
+    USD: 4.07
+    GBP: 5.1
 # add machine-specific properties to application-default.yml

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class NoFluffJobBuilder {
 
     private static final Map<String, String> CATEGORY_MAPPING = ImmutableMap.of("projectManager", "PROJECT_MANAGER",
-            "businessAnalyst", "BUSINESS_ANALYST");
+            "businessAnalyst", "BUSINESS_ANALYST", "businessIntelligence", "BUSINESS_ANALYST");
 
     private final TitleTags titleTags;
     private final TechnologyTags technologyTags;

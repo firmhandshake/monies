@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -21,9 +22,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.Function;
 
 @Configuration
+@EnableConfigurationProperties
 public class ApplicationConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String TECHNOLOGY_TAGS_FILE = "technologyTags.txt";
     private static final String TITLE_TAGS_FILE = "titleTags.txt";
@@ -65,7 +67,7 @@ public class ApplicationConfiguration {
         if (tagFileTry.isSuccess()) {
             return factory.apply(tagFileTry.get());
         } else {
-            logger.error("Failed to read tags from " + file);
+            LOGGER.error("Failed to read tags from " + file);
             throw new IllegalStateException("Failed to read tags from " + file, tagFileTry.getException());
         }
     }

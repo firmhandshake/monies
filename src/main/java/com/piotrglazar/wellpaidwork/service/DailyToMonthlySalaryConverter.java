@@ -10,7 +10,8 @@ import java.util.Set;
 @Component
 public class DailyToMonthlySalaryConverter implements SalaryConverter {
 
-    private static final int WORK_DAYS_IN_YEAR = 250; // in 2017
+    // in 2017
+    private static final int WORK_DAYS_IN_YEAR = 250;
     private static final int MONTHS_IN_YEAR = 12;
 
     private static final float CONVERSION_RATE = (float) WORK_DAYS_IN_YEAR / MONTHS_IN_YEAR;

@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class WellPaidWorkApplicationTests {
+public class WellPaidWorkApplicationTests implements TestCreators {
 
     @Value("${sense.of.the.universe}")
     private int magicValue = 0;
@@ -56,11 +56,7 @@ public class WellPaidWorkApplicationTests {
     @Test
     public void shouldSaveJobOffer() {
         // given
-        JobOffer jobOffer = new JobOffer("externalId", "name", "city", Category.BACKEND,
-                "senior developer", ImmutableSet.of("senior", "developer"), Position.DEVELOPER,
-                new Salary(15000, 18000, Period.MONTH, Currency.PLN),
-                EmploymentType.PERMANENT, DateTime.parse("2017-01-01"), false,
-                ImmutableSet.of("scala", "machine learning"), JobOfferSource.TEST, DateTime.parse("2017-01-01"), Optional.empty());
+        JobOffer jobOffer = jobOffer("externalId");
 
         // when
         Try<Long> idTry = dao.save(jobOffer);
@@ -94,11 +90,7 @@ public class WellPaidWorkApplicationTests {
     @Test
     public void shouldNotAllowJobOffersWithTheSameExternalIdAndSource() {
         // given
-        JobOffer jobOffer = new JobOffer("fancy", "name", "city", Category.BACKEND, "senior developer",
-                ImmutableSet.of("senior", "developer"), Position.DEVELOPER, new Salary(15000,
-                18000, Period.MONTH, Currency.PLN), EmploymentType.PERMANENT,
-                DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
-                JobOfferSource.TEST, DateTime.parse("2017-01-01"), Optional.empty());
+        JobOffer jobOffer = jobOffer("fancy");
         assertThat(dao.save(jobOffer).isSuccess());
 
         // when
@@ -150,13 +142,10 @@ public class WellPaidWorkApplicationTests {
     }
 
     @Test
-    public void shouldMigrateEntryWhichHasUnconvertedSalary() {
+    public void shouldMigrateEntryWhichHasUnconvertedSalaryPeriod() {
         // given
-        JobOffer jobOffer = new JobOffer("migrate", "name", "city", Category.BACKEND, "senior developer",
-                ImmutableSet.of("senior", "developer"), Position.DEVELOPER, new Salary(144000,
-                216000, Period.YEAR, Currency.PLN), EmploymentType.PERMANENT,
-                DateTime.parse("2017-01-01"), false, ImmutableSet.of("scala", "machine learning"),
-                JobOfferSource.TEST, DateTime.parse("2017-01-01"), Optional.empty());
+        JobOffer jobOffer = jobOffer("migratePeriod", new Salary(144000,
+                216000, Period.YEAR, Currency.PLN));
         assertThat(dao.save(jobOffer).isSuccess());
 
         // when
@@ -165,9 +154,47 @@ public class WellPaidWorkApplicationTests {
         // then
         assertThat(migrated).hasSize(1);
         assertThat(migrated.get(0)).extracting(jo -> jo.getSalary().getPeriod()).containsOnly(Period.MONTH);
-        assertThat(dao.find("migrate", JobOfferSource.TEST))
+        assertThat(dao.find("migratePeriod", JobOfferSource.TEST))
                 .isPresent()
                 .hasValueSatisfying(o -> assertThat(o.getSalary()).isEqualTo(new Salary(12000, 18000, Period.MONTH, Currency.PLN)))
+                .hasValueSatisfying(o -> assertThat(o.getOriginalSalary()).isPresent().hasValue(jobOffer.getSalary()));
+    }
+
+    @Test
+    public void shouldMigrateEntryWhichHasUnconvertedSalaryCurrency() {
+        // given
+        JobOffer jobOffer = jobOffer("migrateCurrency", new Salary(2000,
+                4000, Period.MONTH, Currency.EUR));
+        assertThat(dao.save(jobOffer).isSuccess());
+
+        // when
+        List<JobOffer> migrated = jobMigrator.migrate();
+
+        // then
+        assertThat(migrated).hasSize(1);
+        assertThat(migrated.get(0)).extracting(jo -> jo.getSalary().getPeriod()).containsOnly(Period.MONTH);
+        assertThat(dao.find("migrateCurrency", JobOfferSource.TEST))
+                .isPresent()
+                .hasValueSatisfying(o -> assertThat(o.getSalary()).isEqualTo(new Salary(8740, 17480, Period.MONTH, Currency.PLN)))
+                .hasValueSatisfying(o -> assertThat(o.getOriginalSalary()).isPresent().hasValue(jobOffer.getSalary()));
+    }
+
+    @Test
+    public void shouldMigrateEntryWhichHasUnconvertedSalaryCurrencyAndPeriod() {
+        // given
+        JobOffer jobOffer = jobOffer("migrateBoth", new Salary(45000,
+                65000, Period.YEAR, Currency.EUR));
+        assertThat(dao.save(jobOffer).isSuccess());
+
+        // when
+        List<JobOffer> migrated = jobMigrator.migrate();
+
+        // then
+        assertThat(migrated).hasSize(1);
+        assertThat(migrated.get(0)).extracting(jo -> jo.getSalary().getPeriod()).containsOnly(Period.MONTH);
+        assertThat(dao.find("migrateBoth", JobOfferSource.TEST))
+                .isPresent()
+                .hasValueSatisfying(o -> assertThat(o.getSalary()).isEqualTo(new Salary(16388, 23672, Period.MONTH, Currency.PLN)))
                 .hasValueSatisfying(o -> assertThat(o.getOriginalSalary()).isPresent().hasValue(jobOffer.getSalary()));
     }
 }

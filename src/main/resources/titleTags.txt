@@ -5,6 +5,7 @@ qa => quality assurance
 sr => senior
 net => .net
 full-stack => fullstack
+bi => business intelligence
 
 # tags
 java

@@ -1,5 +1,6 @@
 package com.piotrglazar.wellpaidwork.service;
 
+import com.piotrglazar.wellpaidwork.model.Currency;
 import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.Period;
 import com.piotrglazar.wellpaidwork.model.Salary;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 @Component
 public class JobMigrator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final JobOfferDao dao;
     private final SalaryConversionService conversionService;
 
-    private final Set<Period> periodsNeedingConversion = EnumSet.of(Period.DAY, Period.YEAR);
+    private static final Set<Period> periodsNeedingConversion = EnumSet.of(Period.DAY, Period.YEAR);
+    private static final Set<Currency> currenciesNeedingConversion = EnumSet.of(Currency.EUR, Currency.USD, Currency.GBP);
 
     @Autowired
     public JobMigrator(JobOfferDao dao, SalaryConversionService conversionService) {
@@ -44,13 +46,14 @@ public class JobMigrator {
 
     private boolean salaryNeedsConversion(JobOffer jobOffer) {
         Salary salary = jobOffer.getSalary();
-        return periodsNeedingConversion.contains(salary.getPeriod());
+        return periodsNeedingConversion.contains(salary.getPeriod()) ||
+                currenciesNeedingConversion.contains(salary.getCurrency());
     }
 
     private JobOffer updatePeriod(JobOffer jobOffer) {
         Optional<Salary> updatedSalaryOpt = conversionService.convertSalary(jobOffer.getSalary());
         if (!updatedSalaryOpt.isPresent()) {
-            logger.error("Cannot convert salary for job {} {}", jobOffer.getExternalId(), jobOffer.getSource());
+            LOGGER.error("Cannot convert salary for job {} {}", jobOffer.getExternalId(), jobOffer.getSource());
             return jobOffer;
         } else {
             Salary updatedSalary = updatedSalaryOpt.get();
@@ -61,10 +64,10 @@ public class JobMigrator {
     private JobOffer save(JobOffer jobOffer) {
         Try<Long> saveResult = dao.save(jobOffer);
         if (saveResult.isSuccess()) {
-            logger.info("Successfully updated job offer {} {} {}", jobOffer.getId().orElse(null),
+            LOGGER.info("Successfully updated job offer {} {} {}", jobOffer.getId().orElse(null),
                     jobOffer.getExternalId(), jobOffer.getSource());
         } else {
-            logger.error(String.format("Failed to update job offer %s %s %s", jobOffer.getId().orElse(null),
+            LOGGER.error(String.format("Failed to update job offer %s %s %s", jobOffer.getId().orElse(null),
                     jobOffer.getExternalId(), jobOffer.getSource()), saveResult.getException());
         }
         return jobOffer;

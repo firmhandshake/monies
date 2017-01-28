@@ -18,6 +18,5 @@ class NoFluffJobTest extends Specification {
         100         | 2         | 1                  || true
         50          | 2         | 0                  || false
         100         | 2         | 0                  || true
-
     }
 }

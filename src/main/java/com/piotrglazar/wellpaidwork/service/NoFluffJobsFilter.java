@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @Component
 public class NoFluffJobsFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int LIMIT = 20;
 
     private final Set<String> categories;
@@ -42,7 +42,7 @@ public class NoFluffJobsFilter {
     }
 
     public List<NoFluffJob> filterRelevantJobs(List<NoFluffJob> jobs) {
-        logger.info("Using limit of {} jobs", LIMIT);
+        LOGGER.info("Using limit of {} jobs", LIMIT);
         return jobs.stream()
                 .filter(this::shouldProcess)
                 .limit(LIMIT)
@@ -64,7 +64,7 @@ public class NoFluffJobsFilter {
 
     private boolean notAlreadyProcessed(NoFluffJob job) {
         Optional<JobOfferEntity> jobOfferEntity = jobOfferDao.findRaw(job.getId(), JobOfferSource.NO_FLUFF_JOBS);
-        logger.info("Is job with external id {} found? {}", job.getId(), jobOfferEntity.isPresent());
+        LOGGER.info("Is job with external id {} found? {}", job.getId(), jobOfferEntity.isPresent());
         return !jobOfferEntity.isPresent();
     }
 }
