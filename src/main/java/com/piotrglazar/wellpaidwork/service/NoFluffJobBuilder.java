@@ -22,18 +22,16 @@ public class NoFluffJobBuilder {
     private static final Map<String, String> CATEGORY_MAPPING = ImmutableMap.of("projectManager", "PROJECT_MANAGER",
             "businessAnalyst", "BUSINESS_ANALYST", "businessIntelligence", "BUSINESS_ANALYST");
 
-    private final TitleTags titleTags;
-    private final TechnologyTags technologyTags;
     private final DateTimeProvider dateTimeProvider;
     private final SalaryConversionService conversionService;
+    private final TagService tagService;
 
     @Autowired
-    public NoFluffJobBuilder(TitleTags titleTags, TechnologyTags technologyTags, DateTimeProvider dateTimeProvider,
-                             SalaryConversionService conversionService) {
-        this.titleTags = titleTags;
-        this.technologyTags = technologyTags;
+    public NoFluffJobBuilder(DateTimeProvider dateTimeProvider, SalaryConversionService conversionService,
+                             TagService tagService) {
         this.dateTimeProvider = dateTimeProvider;
         this.conversionService = conversionService;
+        this.tagService = tagService;
     }
 
     public Try<JobOffer> toJobOffer(NoFluffJob job, NoFluffJobDetails details) {
@@ -52,10 +50,10 @@ public class NoFluffJobBuilder {
         return new JobOffer(
             job.getId(),
             job.getName(),
-            job.getCity(),
+            tagService.cityTag(job.getCity()),
             category,
             details.getTitle().getTitle(),
-            titleTags.tags(details.getTitle().getTitle()),
+            tagService.titleTags(details.getTitle().getTitle()),
             position,
             convertedSalary.orElse(salary),
             employmentType,
@@ -106,7 +104,7 @@ public class NoFluffJobBuilder {
                 Stream.concat(details.getTechnologiesUsed().stream(), details.getMusts().stream()),
                 details.getNices().stream())
                 .map(NoFluffTechnology::getValue)
-                .map(technologyTags::tags)
+                .map(tagService::technologyTags)
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
     }

@@ -20,6 +20,28 @@ class TechnologyTagsIntegrationTest extends Specification {
         tags == ["sharepoint"].toSet()
     }
 
+    def "should split by comma"() {
+        given:
+        def technology = "java, sql, html"
+
+        when:
+        def tags = technologyTags.tags(technology)
+
+        then:
+        tags == ["java", "sql", "html"].toSet()
+    }
+
+    def "should also split by pipe"() {
+        given:
+        def technology = "|node js|"
+
+        when:
+        def tags = technologyTags.tags(technology)
+
+        then:
+        tags == ["nodejs", "javascript"].toSet()
+    }
+
     def setupSpec() {
         def file = "technologyTags.txt"
         def reader = new TagFileReader()

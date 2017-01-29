@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.piotrglazar.wellpaidwork.util.StringUtils.splitAndTrim;
 
 @Component
 public class NoFluffJobsFilter {
@@ -47,10 +48,6 @@ public class NoFluffJobsFilter {
                 .filter(this::shouldProcess)
                 .limit(LIMIT)
                 .collect(Collectors.toList());
-    }
-
-    private static ImmutableSet<String> splitAndTrim(String raw) {
-        return ImmutableSet.copyOf(Stream.of(raw.split(",")).map(String::trim).collect(Collectors.toSet()));
     }
 
     private boolean shouldProcess(NoFluffJob job) {

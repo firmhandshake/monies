@@ -5,7 +5,7 @@ sources:
     port: 443
     scheme: https
     categories: backend, frontend, fullstack, projectmanager
-    cities: warsaw
+    cities: warsaw, kraków, london, hamburg, gdańsk, cracow, łódź, remote, gdynia, poznań, wrocław
 currencies:
   base: PLN
   conversions:
