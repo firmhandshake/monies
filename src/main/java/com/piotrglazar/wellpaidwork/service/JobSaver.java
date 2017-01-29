@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class JobSaver {
@@ -30,14 +29,18 @@ public class JobSaver {
     public void processJobs(JobResults jobResults) {
         LOGGER.info("Got job results event!");
 
-        List<Try<Long>> savedJobs = jobResults.getJobs()
-                .stream()
-                .map(jobOfferDao::save)
-                .collect(Collectors.toList());
-        long successfullySaved = savedJobs.stream().filter(Try::isSuccess).count();
-        long duplicated = savedJobs.stream().filter(Try::isFailure).map(Try::getException).filter(e -> e instanceof DataIntegrityViolationException).count();
-        long failed = savedJobs.stream().filter(Try::isFailure).map(Try::getException).filter(e -> !(e instanceof DataIntegrityViolationException)).count();
+        Observable<Try<Long>> savedJobs = jobResults.getJobs()
+                .map(jobOfferDao::save);
+        savedJobs.toList().subscribe(tries -> {
+            long successfullySaved = tries.stream().filter(Try::isSuccess).count();
+            long duplicated = tries.stream().filter(Try::isFailure).map(Try::getException).filter(e -> e instanceof DataIntegrityViolationException).count();
+            long failed = tries.stream().filter(Try::isFailure).map(Try::getException).filter(e -> !(e instanceof DataIntegrityViolationException)).count();
 
-        LOGGER.info("{} jobs successfully saved, {} duplicated and {} failed", successfullySaved, duplicated, failed);
+            LOGGER.info("{} jobs successfully saved, {} duplicated and {} failed", successfullySaved, duplicated, failed);
+        }, this::errorHandler);
+    }
+
+    private void errorHandler(Throwable t) {
+        LOGGER.error("Failed to process job results", t);
     }
 }

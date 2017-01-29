@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -35,14 +36,14 @@ public class Engine {
         String descriptionsMessage = Joiner.on(", ").join(descriptions);
         LOGGER.info("About to fetch jobs from {} sources: {}", sources.size(), descriptionsMessage);
 
-        List<JobOffer> jobs = findJobs();
+        Observable<JobOffer> jobs = findJobs();
 
         JobResults jobResults = new JobResults(sources.size(), descriptions, jobs);
         eventPublisher.publishEvent(jobResults);
         return jobResults;
     }
 
-    private List<JobOffer> findJobs() {
-        return sources.stream().flatMap(s -> s.fetch().stream()).collect(Collectors.toList());
+    private Observable<JobOffer> findJobs() {
+        return Observable.from(sources).flatMap(JobSource::fetch);
     }
 }

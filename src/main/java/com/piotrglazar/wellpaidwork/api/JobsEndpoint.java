@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -28,9 +29,18 @@ public class JobsEndpoint {
     }
 
     @RequestMapping("/jobs")
-    public JobResults fetchJobs() {
+    public DeferredResult<JobResultsResponse> fetchJobs() {
         LOGGER.info("About to fetch jobs");
-        return engine.fetchJobs();
+        DeferredResult<JobResultsResponse> response = new DeferredResult<>();
+        JobResults jobResults = engine.fetchJobs();
+        jobResults.getJobs()
+                .toList()
+                .map(jobOffers -> new JobResultsResponse(jobResults.getNumberOfSources(), jobResults.getDescriptions(),
+                    jobOffers))
+                .single()
+                .subscribe(response::setResult, response::setErrorResult);
+
+        return response;
     }
 
     @RequestMapping("/jobs/migrate")

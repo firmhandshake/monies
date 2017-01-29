@@ -27,6 +27,10 @@ sonar => sonarqube
 couchdb => couchbase
 oralce => oracle
 backbone => backbonejs
+relational databases => relational database
+continous integration => continuous integration
+nhibernate => hibernate
+messaging queue protocols => messaging queue
 
 # content
 html5
@@ -36,6 +40,7 @@ sass
 css3
 xml
 less
+kendo ui
 
 # methodologies
 rest
@@ -49,6 +54,9 @@ mvc
 continuous integration
 clean code
 saas
+agile
+prism
+solid
 
 # languages
 java
@@ -74,6 +82,7 @@ coffeescript
 typescript
 lua
 objective-c
+perl
 
 # tools
 git
@@ -148,6 +157,7 @@ adobe cc
 phing
 behat
 capistrano
+svn
 
 # databases
 mssql
@@ -169,6 +179,7 @@ activemq
 hazelcast
 couchbase
 mariadb
+relational database
 
 # misc
 functional programming
@@ -193,12 +204,14 @@ pcb design
 wireless
 virtual reality
 gsm
+lte
 gps
 satellite communications
 etl
 messaging queue
 soap
 ajax
+async
 
 # frameworks
 spring
@@ -220,6 +233,7 @@ zend
 wordpress
 nodejs
 hibernate
+rxjava
 flask
 spark
 hadoop
@@ -236,6 +250,7 @@ coldfusion
 ember
 scss
 haml
+jasper
 asp.net
 quartz
 cxf
@@ -267,6 +282,14 @@ hanami
 padrino
 phpunit
 bower
+clearcase
+karma
+graphql
+jasmine
+liferay
+vaadin
+linq
+xslt
 
 # servers
 tomcat
