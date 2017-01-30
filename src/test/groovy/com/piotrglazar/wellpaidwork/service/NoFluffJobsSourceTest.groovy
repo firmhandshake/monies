@@ -27,9 +27,12 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
                 new NoFluffJobBuilder(new TestDateTimeProvider(), new DummyConversionService(), tagService))
 
         when:
-        def found = source.fetch()
+        def found = source.fetch().toList().toBlocking().single()
 
         then:
+        found.size() == 1
+        found.category == [BACKEND]
+        found.city == ["warsaw"]
         1 * dao.findRaw(_, _) >> Optional.empty()
         1 * client.getJobPostings() >> Optional.of(
                 jobPostings(backendJob, hrJob)
@@ -39,9 +42,6 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         tagService.cityTag(_) >> "warsaw"
         tagService.technologyTags(_) >> [].toSet()
         tagService.titleTags(_) >> [].toSet()
-        found.size() == 1
-        found.category == [BACKEND]
-        found.city == ["warsaw"]
     }
 
     def "should not fail when it was unable to build job details"() {
@@ -52,16 +52,16 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         def source = new NoFluffJobsSource(client, filter(dao), builder)
 
         when:
-        def found = source.fetch()
+        def found = source.fetch().toList().toBlocking().single()
 
         then:
+        found.isEmpty()
         1 * dao.findRaw(_, _) >> Optional.empty()
         1 * client.getJobPostings() >> Optional.of(
                 jobPostings(backendJob, hrJob)
         )
         1 * client.getJobDetailsAsync(backendJob) >> CompletableFuture.completedFuture(Optional.of(backendJobDetails))
         1 * builder.toJobOffer(backendJob, backendJobDetails) >> Try.failed(new RuntimeException("test - building exception"))
-        found.isEmpty()
     }
 
     def "should return empty list when client failed to fetch jobs"() {
@@ -74,7 +74,7 @@ class NoFluffJobsSourceTest extends Specification implements TestCreators {
         def found = source.fetch()
 
         then:
-        found.size() == 0
+        found.toList().toBlocking().single().size() == 0
         0 * jobBuilder.toJobOffer(_, _)
         1 * client.getJobPostings() >> Optional.empty()
     }

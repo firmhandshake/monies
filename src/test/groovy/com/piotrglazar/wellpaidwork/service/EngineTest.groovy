@@ -5,6 +5,7 @@ import com.piotrglazar.wellpaidwork.model.JobOffer
 import com.piotrglazar.wellpaidwork.model.JobResults
 import com.piotrglazar.wellpaidwork.model.JobSource
 import org.springframework.context.ApplicationEventPublisher
+import rx.Observable
 import spock.lang.Specification
 
 class EngineTest extends Specification implements TestCreators {
@@ -21,7 +22,7 @@ class EngineTest extends Specification implements TestCreators {
         with(fetchedJobs) {
             numberOfSources == 2
             descriptions == ["first", "second"]
-            jobs.size() == 2
+            jobs.toList().toBlocking().single().size() == 2
         }
     }
 
@@ -41,8 +42,8 @@ class EngineTest extends Specification implements TestCreators {
             }
 
             @Override
-            List<JobOffer> fetch() {
-                return [jobOffer("id1")]
+            Observable<JobOffer> fetch() {
+                return Observable.just(jobOffer("id1"))
             }
         }
     }
@@ -55,8 +56,8 @@ class EngineTest extends Specification implements TestCreators {
             }
 
             @Override
-            List<JobOffer> fetch() {
-                return [jobOffer("id2")]
+            Observable<JobOffer> fetch() {
+                return Observable.just(jobOffer("id2"))
             }
         }
     }

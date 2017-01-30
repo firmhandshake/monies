@@ -10,6 +10,7 @@ import com.piotrglazar.wellpaidwork.model.db.JobOfferEntity;
 import com.piotrglazar.wellpaidwork.model.db.JobOfferSource;
 import com.piotrglazar.wellpaidwork.model.db.SalaryEntity;
 import org.joda.time.DateTime;
+import rx.Observable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,7 +56,7 @@ public interface TestCreators {
     }
 
     default JobResults jobResults(JobOffer... jobOffers) {
-        return new JobResults(1, Collections.singletonList("test source"), Arrays.asList(jobOffers));
+        return new JobResults(1, Collections.singletonList("test source"), Observable.from(jobOffers));
     }
 
     default JobOfferEntity jobOfferEntity(String externalId) {

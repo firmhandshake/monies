@@ -5,19 +5,17 @@ import com.piotrglazar.wellpaidwork.api.NoFluffJobPostings;
 import com.piotrglazar.wellpaidwork.api.NoFluffJobsClient;
 import com.piotrglazar.wellpaidwork.model.JobOffer;
 import com.piotrglazar.wellpaidwork.model.JobSource;
-import com.piotrglazar.wellpaidwork.util.FutureUtils;
 import com.piotrglazar.wellpaidwork.util.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import rx.Observable;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Component
 public class NoFluffJobsSource implements JobSource {
@@ -41,33 +39,21 @@ public class NoFluffJobsSource implements JobSource {
     }
 
     @Override
-    public List<JobOffer> fetch() {
+    public Observable<JobOffer> fetch() {
         Optional<NoFluffJobPostings> jobPostings = client.getJobPostings();
         if (jobPostings.isPresent()) {
             NoFluffJobPostings noFluffJobPostings = jobPostings.get();
             List<NoFluffJob> jobs = filter.filterRelevantJobs(noFluffJobPostings.getPostings());
             LOGGER.info("Found {} jobs, {} are relevant", noFluffJobPostings.getPostings().size(), jobs.size());
 
-            List<CompletableFuture<Optional<JobOffer>>> jobOffersFuture = jobs.stream()
-                    .map(this::fetchJobOffer)
-                    .collect(Collectors.toList());
-
-            return getJobOffers(jobOffersFuture)
-                    .stream()
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList());
+            return Observable.from(jobs)
+                .map(this::fetchJobOffer)
+                .flatMap(Observable::from)
+                .filter(Optional::isPresent)
+                .map(Optional::get);
         } else {
-            return Collections.emptyList();
+            return Observable.empty();
         }
-    }
-
-    private List<Optional<JobOffer>> getJobOffers(List<CompletableFuture<Optional<JobOffer>>> jobOffersFuture) {
-        return Try.of(() -> FutureUtils.asList(jobOffersFuture).get())
-                .recover(error -> {
-                    LOGGER.error("Waiting for async job details fetch failed", error);
-                    return Collections.emptyList();
-                });
     }
 
     private CompletableFuture<Optional<JobOffer>> fetchJobOffer(NoFluffJob job) {

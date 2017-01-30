@@ -1,10 +1,10 @@
 package com.piotrglazar.wellpaidwork.model;
 
-import java.util.List;
+import rx.Observable;
 
 public interface JobSource {
 
     String description();
 
-    List<JobOffer> fetch();
+    Observable<JobOffer> fetch();
 }

@@ -1,22 +1,22 @@
-package com.piotrglazar.wellpaidwork.model;
+package com.piotrglazar.wellpaidwork.api;
 
 import com.google.common.collect.ImmutableList;
-import rx.Observable;
+import com.piotrglazar.wellpaidwork.model.JobOffer;
 
 import java.util.List;
 
-public class JobResults {
+public class JobResultsResponse {
 
     private final int numberOfSources;
 
     private final List<String> descriptions;
 
-    private final Observable<JobOffer> jobs;
+    private final List<JobOffer> jobs;
 
-    public JobResults(int numberOfSources, List<String> descriptions, Observable<JobOffer> jobs) {
+    public JobResultsResponse(int numberOfSources, List<String> descriptions, List<JobOffer> jobs) {
         this.numberOfSources = numberOfSources;
         this.descriptions = ImmutableList.copyOf(descriptions);
-        this.jobs = jobs;
+        this.jobs = ImmutableList.copyOf(jobs);
     }
 
     public int getNumberOfSources() {
@@ -27,7 +27,7 @@ public class JobResults {
         return descriptions;
     }
 
-    public Observable<JobOffer> getJobs() {
+    public List<JobOffer> getJobs() {
         return jobs;
     }
 }
