@@ -4,7 +4,7 @@ sources:
     rootPath: /api/posting
     port: 443
     scheme: https
-    categories: backend, frontend, fullstack, projectmanager
+    categories: backend, frontend, fullstack, projectmanager, businessintelligence, devops
     cities: warsaw, kraków, london, hamburg, gdańsk, cracow, łódź, remote, gdynia, poznań, wrocław
 currencies:
   base: PLN

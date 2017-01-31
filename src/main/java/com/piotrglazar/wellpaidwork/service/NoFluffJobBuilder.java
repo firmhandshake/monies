@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class NoFluffJobBuilder {
 
     private static final Map<String, String> CATEGORY_MAPPING = ImmutableMap.of("projectManager", "PROJECT_MANAGER",
-            "businessAnalyst", "BUSINESS_ANALYST", "businessIntelligence", "BUSINESS_ANALYST");
+            "businessAnalyst", "BUSINESS_ANALYST", "businessIntelligence", "BUSINESS_INTELLIGENCE");
 
     private final DateTimeProvider dateTimeProvider;
     private final SalaryConversionService conversionService;
@@ -95,8 +95,11 @@ public class NoFluffJobBuilder {
     }
 
     private Try<Position> position(NoFluffJobDetails details) {
-        return Try.of(() -> Position.fromString(details.getTitle().getLevel())
-                .<PositionNotFoundException>orElseThrow(PositionNotFoundException::new));
+        return Try.of(() -> {
+            String position = details.getTitle().getLevel();
+            return Position.fromString(position)
+                    .<PositionNotFoundException>orElseThrow(() -> new PositionNotFoundException(position));
+        });
     }
 
     private Set<String> technologyTags(NoFluffJobDetails details) {
