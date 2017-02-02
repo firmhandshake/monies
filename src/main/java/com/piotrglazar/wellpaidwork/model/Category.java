@@ -20,7 +20,8 @@ public enum Category {
     PROJECT_MANAGER,
     TRAINEE,
     UX,
-    BUSINESS_ANALYST;
+    BUSINESS_ANALYST,
+    BUSINESS_INTELLIGENCE;
 
     private static final Map<String, Category> names = ImmutableMap.copyOf(Stream.of(Category.values())
             .collect(Collectors.toMap(Category::name, Function.identity())));

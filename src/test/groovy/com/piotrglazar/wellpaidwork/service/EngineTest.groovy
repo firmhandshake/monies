@@ -8,13 +8,17 @@ import org.springframework.context.ApplicationEventPublisher
 import rx.Observable
 import spock.lang.Specification
 
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.atomic.AtomicInteger
+
 class EngineTest extends Specification implements TestCreators {
 
     def eventPublisher = Mock(ApplicationEventPublisher)
 
-    def engine = new Engine([firstJobSource(), secondJobSource()], eventPublisher)
-
     def "should fetch jobs from all sources"() {
+        given:
+        def engine = new Engine([firstJobSource(), secondJobSource()], eventPublisher)
+
         when:
         def fetchedJobs = engine.fetchJobs()
 
@@ -27,11 +31,47 @@ class EngineTest extends Specification implements TestCreators {
     }
 
     def "should publish fetched jobs"() {
+        given:
+        def engine = new Engine([firstJobSource(), secondJobSource()], eventPublisher)
+
         when:
         engine.fetchJobs()
 
         then:
         1 * eventPublisher.publishEvent(_ as JobResults)
+    }
+
+    def "should fetch jobs once - hot observable"() {
+        given:
+        def itemCounter = new AtomicInteger()
+        def callCounter = new AtomicInteger()
+        def engine = new Engine([countingJobSource(callCounter)], eventPublisher)
+
+        when:
+        def fetchedJobs = engine.fetchJobs()
+        fetchedJobs.jobs.subscribe({itemCounter.incrementAndGet()})
+        fetchedJobs.jobs.subscribe({itemCounter.incrementAndGet()})
+
+        then:
+        itemCounter.intValue() == 2
+        callCounter.intValue() == 1
+    }
+
+    def countingJobSource(AtomicInteger counter) {
+        new JobSource() {
+            @Override
+            String description() {
+                return "counting"
+            }
+
+            @Override
+            Observable<JobOffer> fetch() {
+                return Observable.from(CompletableFuture.supplyAsync({
+                    counter.incrementAndGet()
+                    jobOffer("id3")
+                }))
+            }
+        }
     }
 
     def firstJobSource() {

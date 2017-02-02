@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import rx.Observable;
+import rx.subjects.ReplaySubject;
+import rx.subjects.Subject;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -43,7 +45,14 @@ public class Engine {
         return jobResults;
     }
 
-    private Observable<JobOffer> findJobs() {
+    private ReplaySubject<JobOffer> findJobs() {
+        ReplaySubject<JobOffer> subject = ReplaySubject.create();
+        Observable<JobOffer> jobs = findJobsFromAllSources();
+        jobs.subscribe(subject);
+        return subject;
+    }
+
+    private Observable<JobOffer> findJobsFromAllSources() {
         return Observable.from(sources).flatMap(JobSource::fetch);
     }
 }

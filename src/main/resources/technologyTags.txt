@@ -20,6 +20,7 @@ electron.atom.io => electron
 iot => internet of things
 wifi => wireless
 postresql => postgresql
+postgressql => postgresql
 vr => virtual reality
 ci => continuous integration
 mongo => mongodb
@@ -31,6 +32,8 @@ relational databases => relational database
 continous integration => continuous integration
 nhibernate => hibernate
 messaging queue protocols => messaging queue
+ha => high availability
+mapreduce => map reduce
 
 # content
 html5
@@ -52,6 +55,7 @@ rwd
 web services
 mvc
 continuous integration
+continuous delivery
 clean code
 saas
 agile
@@ -158,6 +162,36 @@ phing
 behat
 capistrano
 svn
+excel
+khalix
+hyperion
+acca
+cima
+uwsgi
+celery
+nagios
+consul
+nexus
+grafana
+influxdb
+s3
+ec2
+rds
+chef
+brio
+datastage
+informatica powercenter
+vmware
+hyper-v
+cloudwatch
+sisense
+yellowfin
+varnish
+logstash
+kibana
+virtualbox
+kvm
+openvz
 
 # databases
 mssql
@@ -180,6 +214,10 @@ hazelcast
 couchbase
 mariadb
 relational database
+olap
+dwh
+hiveql
+map reduce
 
 # misc
 functional programming
@@ -212,6 +250,8 @@ messaging queue
 soap
 ajax
 async
+load balancing
+windows
 
 # frameworks
 spring
@@ -290,6 +330,7 @@ liferay
 vaadin
 linq
 xslt
+oozie
 
 # servers
 tomcat
